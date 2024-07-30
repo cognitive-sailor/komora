@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Senzorji{% endblock %}
+
+{% block content %}
+<ul>
+    {% for sensor in sensors %}
+        <li>{{sensor}}</li>
+    {% endfor %}
+</ul>
+<a href="{{url_for('sensors.create')}}">Dodaj senzor</a>
+{% endblock %}

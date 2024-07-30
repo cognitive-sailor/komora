@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}KomoraSOFT{% endblock %}
+
+{% block content %}
+    <h1>Izhodišče</h1>
+    <a href="{{ url_for('sensors.index')}}">Senzorji</a>
+    <a href="{{ url_for('actuators.index')}}">Aktuatorji</a>
+    <a href="{{ url_for('users.index')}}">Uporabniki</a>
+    <a href="{{ url_for('users.login')}}">Vpis</a>
+    <a href="{{ url_for('users.signup')}}">Prijava</a>
+{% endblock %}

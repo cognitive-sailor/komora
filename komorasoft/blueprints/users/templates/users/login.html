@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Vpis{% endblock %}
+
+{% block content %}
+<h1>Pozdravljeni v KomoraSOFT programu.</h1>
+<h2>Vpiši se v račun.</h2><br>
+<div class="container-lg">
+    <form class="was-validated" data-bs-theme="dark" action="{{url_for('users.login')}}" method="POST">
+        <input type="text" name="username" placeholder="Ime" required="required"><br>
+        <input type="password" name="password" placeholder="Geslo" id="geslo" required="required">
+        <input type="submit" value="Vpis">
+    </form><br>
+</div>
+{% endblock %}

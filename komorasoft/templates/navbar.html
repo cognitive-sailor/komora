@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-sm bg-body-tertiary" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{url_for('core.index')}}">KomoraSOFT</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('core.index')}}">Prikazovalnik</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Upravljanje
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Protokol</a></li>
+              <li><a class="dropdown-item" href="#">Ročno</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Naprave
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{{url_for('sensors.index')}}">Senzorji</a></li>
+              <li><a class="dropdown-item" href="{{url_for('actuators.index')}}">Aktuatorji</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Meritve</a>
+          </li>
+        </ul>
+        {% if not current_user.is_authenticated %}
+          <form action="{{url_for('users.login')}}" class="d-flex" role="search" method="POST">
+            <input class="form-control me-2" type="text" name="username" required="required" placeholder="Uporabnik" aria-label="Search">
+            <input class="form-control me-2" type="password" name="password" placeholder="Geslo" id="geslo" required="required" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Vpis</button>
+          </form>
+        {% else %}
+          <div class="btn-group">
+            <a href="{{url_for('users.index')}}" class="btn btn-success">{{current_user.username}}</a>
+            <a href="{{url_for('users.logout')}}" class="btn btn-dark">Izpis</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>

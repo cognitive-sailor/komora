@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Aktuatorji{% endblock %}
+
+{% block content %}
+<ul>
+    {% for actuator in actuators %}
+        <li>{{actuator}}</li>
+    {% endfor %}
+</ul>
+<a href="{{url_for('actuators.create')}}">Dodaj aktuator</a>
+{% endblock %}

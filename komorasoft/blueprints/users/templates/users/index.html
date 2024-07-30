@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Uporabniki{% endblock %}
+
+{% block content %}
+    {% if current_user.is_authenticated %}
+        <h1>Pozdravljeni, {{current_user.username}}</h1>
+        <ul>
+            {% for user in users %}
+                <li>{{user}}</li>
+            {% endfor %}
+        </ul>
+        <br>
+        <a href="{{url_for('users.login')}}">Vpis</a><br>
+        <a href="{{url_for('users.signup')}}">Dodaj uporabnika</a><br>
+        <a href="{{url_for('users.delete')}}">Izbriši uporabnika</a><br>
+        <a href="{{url_for('users.logout')}}">Izpis</a><br>
+    {% else %}
+        <div class="container-sm">
+            <h3>Niste vpisani.</h3>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Prijava{% endblock %}
+
+{% block content %}
+<h1>Pozdravljeni v KomoraSOFT programu.</h1>
+<h2>Ustvarjanje novega uporabnika</h2>
+<form class="was-validated" data-bs-theme="dark" action="{{url_for('users.signup')}}" method="POST">
+    <input type="text" name="username" placeholder="Ime" required="required"><br>
+    <input type="password" name="password" id="geslo" value="Geslo" required="required"><br>
+    <input type="text" name="description" placeholder="Opis"><br>
+    <input type="radio" name="role" id="uporabnik", value="Uporabnik">
+    <label for="uporabnik">Uporabnik</label><br>
+    <input type="radio" name="role" id="admin", value="Administrator">
+    <label for="admin">Administrator</label><br>
+    <input type="submit" value="Prijava">
+</form>
+{% endblock %}
