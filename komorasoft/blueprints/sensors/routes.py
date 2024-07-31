@@ -50,3 +50,26 @@ def delete():
                 return render_template('sensors/not_authorized.html')
         else:
             return render_template('sensors/not_authorized.html')
+        
+
+@sensors.route('/edit', methods=['GET','POST'])
+def edit():
+    if request.method == 'GET':
+        return render_template('sensors/edit.html')
+    elif request.method == 'POST':
+        name_old = request.form.get('name_old')
+        name = request.form.get('name')
+        desc = request.form.get('description')
+        desc = desc if desc != '' else None # dodaj opis, če ga je uporabnik definiral
+        state = False # preveri dejansko stanje aktuatorja!
+
+        sensor = Sensor.query.filter(Sensor.name == name_old).first()
+
+        if current_user.is_authenticated and current_user.role=="Administrator":
+            sensor.name = name
+            sensor.description = desc
+            sensor.state = state
+            db.session.commit()  # Commit the changes to the database
+            return redirect(url_for('sensors.index'))
+        else:
+            return render_template('sensors/not_authorized.html')

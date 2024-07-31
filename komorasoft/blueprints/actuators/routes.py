@@ -42,30 +42,32 @@ def delete():
 
         actuator = Actuator.query.filter(Actuator.name == name).first()
 
-        if current_user.is_authenticated:
-            if current_user.role == "Administrator":
-                db.session.delete(actuator)
-                db.session.commit()
-                return redirect(url_for('actuators.index'))
-            else:
-                return render_template('actuators/not_authorized.html')
+        if current_user.is_authenticated and current_user.role == "Administrator":
+            db.session.delete(actuator)
+            db.session.commit()
+            return redirect(url_for('actuators.index'))
         else:
             return render_template('actuators/not_authorized.html')
         
 
 @actuators.route('/edit', methods=['GET','POST'])
-def edit(actuator_id):
+def edit():
     if request.method == 'GET':
         return render_template('actuators/edit.html')
     elif request.method == 'POST':
-        name = request.form.get('naziv')
+        name_old = request.form.get('name_old')
+        name = request.form.get('name')
         desc = request.form.get('description')
         desc = desc if desc != '' else None # dodaj opis, če ga je uporabnik definiral
         state = False # preveri dejansko stanje aktuatorja!
 
-        actuator = Actuator(name=name, description=desc, state=state) # dodaj nov aktuator
+        actuator = Actuator.query.filter(Actuator.name == name_old).first()
 
-        db.session.add(actuator)
-        db.session.commit()
-
-        return redirect(url_for('actuators.index'))
+        if current_user.is_authenticated and current_user.role=="Administrator":
+            actuator.name = name
+            actuator.description = desc
+            actuator.state = state
+            db.session.commit()  # Commit the changes to the database
+            return redirect(url_for('actuators.index'))
+        else:
+            return render_template('actuators/not_authorized.html')

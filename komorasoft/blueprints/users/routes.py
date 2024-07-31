@@ -45,12 +45,13 @@ def register_user_routes(app, db, bcrypt):
         elif request.method == 'POST':
             username = request.form.get('username')
             password = request.form.get('password')
+            next = request.form.get('next') # which page did the user login from
 
             user = User.query.filter(User.username == username).first()
 
             if bcrypt.check_password_hash(user.password, password):
                 login_user(user)
-                return redirect(url_for('users.index'))
+                return redirect(next)
             else:
                 return 'Neuspešen vpis'
             
@@ -73,8 +74,12 @@ def register_user_routes(app, db, bcrypt):
             else:
                 return render_template('users/not_authorized.html')
 
-    @users.route('/logout')
+    @users.route('/logout', methods=['GET','POST'])
     def logout():
-        logout_user()
-        return redirect(url_for('core.index'))
+        if request.method == 'POST':
+            next = request.form.get('next')
+            logout_user()
+            return redirect(next)
+        else:
+            return redirect(next)
     

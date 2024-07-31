@@ -4,6 +4,7 @@ from typing import List, Optional
 import threading
 import h5py
 import uuid
+import os
 
 @dataclass
 class ActuatorEvent:
@@ -18,6 +19,7 @@ class Schedule:
     schedule_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     start_time: Optional[datetime] = None  # The time when the schedule starts
     events: List[ActuatorEvent] = field(default_factory=list)
+    created: Optional[datetime] = field(default_factory=lambda: datetime.now())
     _lock: threading.Lock = field(default_factory=threading.Lock, init=False)
 
     def add_event(self, actuator_name: str, state: str, offset: timedelta):
@@ -70,10 +72,15 @@ class Schedule:
 
     def save_to_file(self, filename: str):
         with self._lock:
-            with h5py.File(filename, 'w') as f:
+            save_path = "../measurements/"
+            if not os.path.exists(save_path):
+                os.makedirs(save_path)
+                print("Folder {save_path} created!")
+            with h5py.File(os.path.join(save_path,filename), 'w') as f:
                 f.attrs['name'] = self.name
                 f.attrs['schedule_id'] = self.schedule_id
                 f.attrs['start_time'] = self.start_time.isoformat() if self.start_time else ""
+                f.attrs['created'] = self.created.isoformat() if self.created else ""
                 events_group = f.create_group('events')
                 events_group.attrs['description'] = "The list of all events (event is when the actuator changes the state).\
                                                         Field 'offset' represents the time in seconds from schedule 'start_time'\
@@ -87,11 +94,14 @@ class Schedule:
 
     @classmethod
     def load_from_file(cls, filename: str) -> 'Schedule':
-        with h5py.File(filename, 'r') as f:
+        load_path = "../measurements/"
+        with h5py.File(os.path.join(load_path,filename), 'r') as f:
             name = f.attrs['name']
             schedule_id = f.attrs['schedule_id']
             start_time_str = f.attrs['start_time']
             start_time = datetime.fromisoformat(start_time_str) if start_time_str else None
+            created_time_str = f.attrs['created']
+            created = datetime.fromisoformat(created_time_str) if created_time_str else None
             events = []
             for event_id in f['events']:
                 event_group = f['events'][event_id]
@@ -102,13 +112,29 @@ class Schedule:
                     offset=timedelta(seconds=event_group.attrs['offset'])  # Convert seconds back to timedelta
                 )
                 events.append(event)
-            return cls(name=name, schedule_id=schedule_id, start_time=start_time, events=events)
+            return cls(name=name, schedule_id=schedule_id, start_time=start_time, events=events, created=created)
 
 # # Usage example
 # schedule = Schedule(name="Main Schedule")
 # schedule.set_start_time(datetime(2024, 7, 30, 15, 0))
 # schedule.add_event("actuator1", "on", timedelta(hours=1))
 # schedule.add_event("actuator1", "off", timedelta(hours=2, minutes=12, seconds=45))
+# schedule.add_event("actuator1", "on", timedelta(hours=5, minutes=15, seconds=23))
+# schedule.add_event("actuator1", "off", timedelta(hours=12, minutes=44, seconds=14))
+# # Save the schedule to a file
+# schedule.save_to_file('schedule.h5')
+
+# # Load the schedule from a file
+# loaded_schedule = Schedule.load_from_file('schedule.h5')
+# print(f"Loaded Schedule ID: {loaded_schedule.schedule_id}")
+# print(f"Schedule Start Time: {loaded_schedule.start_time}")
+# for event in loaded_schedule.get_events():
+#     abs_time = loaded_schedule.get_absolute_time(event)
+#     print(f"Loaded Event: {event}, Absolute Time: {abs_time}")
+
+# # Add two more events
+# schedule.add_event("actuator1", "on", timedelta(hours=3))
+# schedule.add_event("actuator1", "off", timedelta(hours=51, minutes=1, seconds=7))
 
 # # Save the schedule to a file
 # schedule.save_to_file('schedule.h5')

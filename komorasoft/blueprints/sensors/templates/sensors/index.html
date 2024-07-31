@@ -23,13 +23,13 @@
                         {% endfor %}
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                <button type="button" class="btn btn-warning">Uredi</button>
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalEdit{{ loop.index }}">Uredi</button>
                                 <!-- Button trigger modal -->
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete{{ loop.index }}">
                                     Odstrani
                                 </button>
                             </div>
-                                
+                            {% include 'sensors/edit.html' %}
                             {% include 'sensors/remove.html' %}
                             
                         </td>

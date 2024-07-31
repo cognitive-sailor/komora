@@ -3,15 +3,15 @@
     <div class="modal-dialog">
         <div class="modal-content bg-dark">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modalLabel{{ loop.index }}">Uredi aktuator</h1>
+                <h1 class="modal-title fs-5" id="modalLabel{{ loop.index }}">Uredi senzor</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Želiš spremeniti aktuator: {{ row[1] }}?</p>
+                <p>Želiš spremeniti senzor: {{ row[1] }}?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>
-                <form action="{{ url_for('actuators.edit') }}" method="post">
+                <form action="{{ url_for('sensors.edit') }}" method="post">
                     <input name="name_old" placeholder="{{ row[1] }}" value="{{row[1]}}" hidden>
                     <input name="name" placeholder="{{ row[1] }}" required="required">
                     <input name="description" placeholder="{{ row[3] }}">
