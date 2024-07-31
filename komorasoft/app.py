@@ -25,9 +25,9 @@ def create_app():
     
     bcrypt = Bcrypt(app)
 
-    from komorasoft.blueprints.users.routes import register_routes
+    from komorasoft.blueprints.users.routes import register_user_routes
 
-    register_routes(app, db, bcrypt)
+    register_user_routes(app, db, bcrypt)
 
     # import and register all blueprints
     from komorasoft.blueprints.sensors.routes import sensors # import sensors blueprint

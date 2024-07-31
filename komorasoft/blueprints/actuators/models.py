@@ -6,11 +6,12 @@ class Actuator(db.Model):
 
     sid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    description = db.Column(db.String)
     state = db.Column(db.Boolean, nullable=False)
+    description = db.Column(db.String)
+    
 
     def __repr__(self):
-        return f"Aktuator:    {self.name}, stanje:    {self.state}"
+        return f"{self.name}, stanje:    {self.state},   opis:    {self.description}"
     
     def get_id(self):
         return self.sid

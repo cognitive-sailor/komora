@@ -1,0 +1,21 @@
+<!-- Modal -->
+<div class="modal fade" id="modalDelete{{ loop.index }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel{{ loop.index }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalLabel{{ loop.index }}">Odstrani senzor</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Želiš trajno izbrisati senzor: {{ row[1] }}?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>
+                <form action="{{ url_for('sensors.delete') }}" method="post">
+                    <input type="hidden" name="naziv" value="{{ row[1] }}">
+                    <button type="submit" class="btn btn-primary">OK</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

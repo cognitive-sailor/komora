@@ -2,10 +2,56 @@
 {% block title %}Senzorji{% endblock %}
 
 {% block content %}
-<ul>
-    {% for sensor in sensors %}
-        <li>{{sensor}}</li>
-    {% endfor %}
-</ul>
-<a href="{{url_for('sensors.create')}}">Dodaj senzor</a>
+<div>
+    <h1>SENZORJI</h1><br>
+    
+    {% if sensors %}
+        <table class="table table-success table-hover">
+            <thead>
+                <tr>
+                    {% for col in columns %}
+                        <th scope="col">{{col}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        {% for element in row %}
+                            <!-- <th scope="row">{{loop.index0}}</th> -->
+                            <td>{{element}}</td>
+                        {% endfor %}
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                <button type="button" class="btn btn-warning">Uredi</button>
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete{{ loop.index }}">
+                                    Odstrani
+                                </button>
+                            </div>
+                                
+                            {% include 'sensors/remove.html' %}
+                            
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <center><p>V bazi ni shranjen noben senzor.</p></center>
+    {% endif %}
+</div><br>
+{% if current_user.role == "Administrator" %}
+    <div align="right">
+        <form action="{{ url_for('sensors.create') }}" method="post">
+            <input type="text" name="naziv" placeholder="Naziv" required="required">
+            <input type="text" name="description" placeholder="Opis">
+            <button type="submit" class="btn btn-dark">Dodaj senzor</button>
+        </form>
+    </div>
+{% endif %}
+<div>
+    <br>
+    <br>
+</div>
 {% endblock %}

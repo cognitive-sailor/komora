@@ -1,4 +1,5 @@
 from flask import request, render_template, redirect, url_for, Blueprint
+from flask_login import current_user, AnonymousUserMixin
 
 from komorasoft.app import db
 from komorasoft.blueprints.sensors.models import Sensor
@@ -8,7 +9,10 @@ sensors = Blueprint('sensors', __name__, template_folder='templates')
 @sensors.route('/')
 def index():
     sensors = Sensor.query.all()
-    return render_template('sensors/index.html', sensors=sensors)
+    #cols = [column.name for column in Sensor.__table__.columns]
+    cols = ["ID","Naziv","Stanje","Opis","Dejanja"]
+    rows = [[sensor.sid,sensor.name,sensor.state,sensor.description] for sensor in sensors]
+    return render_template('sensors/index.html', sensors=sensors, columns=cols, rows=rows)
 
 @sensors.route('/create', methods=['GET','POST'])
 def create():
@@ -26,3 +30,23 @@ def create():
         db.session.commit()
 
         return redirect(url_for('sensors.index'))
+    
+@sensors.route('/delete', methods=['GET','POST'])
+def delete():
+    if request.method == 'GET':
+        sensors = Sensor.query.all()
+        return render_template('sensors/delete.html', sensors=sensors)
+    elif request.method == 'POST':
+        name = request.form.get('naziv')
+
+        sensor = Sensor.query.filter(Sensor.name == name).first()
+
+        if current_user.is_authenticated:
+            if current_user.role == "Administrator":
+                db.session.delete(sensor)
+                db.session.commit()
+                return redirect(url_for('sensors.index'))
+            else:
+                return render_template('sensors/not_authorized.html')
+        else:
+            return render_template('sensors/not_authorized.html')

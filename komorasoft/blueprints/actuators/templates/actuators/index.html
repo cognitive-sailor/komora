@@ -2,10 +2,56 @@
 {% block title %}Aktuatorji{% endblock %}
 
 {% block content %}
-<ul>
-    {% for actuator in actuators %}
-        <li>{{actuator}}</li>
-    {% endfor %}
-</ul>
-<a href="{{url_for('actuators.create')}}">Dodaj aktuator</a>
+<div>
+    <h1>AKTUATORJI</h1><br>
+    
+    {% if actuators %}
+        <table class="table table-success table-hover">
+            <thead>
+                <tr>
+                    {% for col in columns %}
+                        <th scope="col">{{col}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        {% for element in row %}
+                            <td>{{element}}</td>
+                        {% endfor %}
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalEdit{{ loop.index }}">Uredi</button>
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete{{ loop.index }}">
+                                    Odstrani
+                                </button>
+                            </div>
+
+                            {% include 'actuators/edit.html'%}
+                            {% include 'actuators/remove.html'%}
+                            
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <center><p>V bazi ni shranjen noben aktuator.</p></center>
+    {% endif %}
+</div><br>
+{% if current_user.role == "Administrator" %}
+<div align="right">
+    <form action="{{ url_for('actuators.create') }}" method="post">
+        <input type="text" name="naziv" placeholder="Naziv" required="required">
+        <input type="text" name="description" placeholder="Opis">
+        <button type="submit" class="btn btn-dark">Dodaj aktuator</button>
+    </form>
+</div>
+{% endif %}
+<div>
+    <br>
+    <br>
+</div>
 {% endblock %}
