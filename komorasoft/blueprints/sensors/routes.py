@@ -1,5 +1,5 @@
 from flask import request, render_template, redirect, url_for, Blueprint
-from flask_login import current_user, AnonymousUserMixin
+from flask_login import current_user, login_required
 
 from komorasoft.app import db
 from komorasoft.blueprints.sensors.models import Sensor
@@ -15,6 +15,7 @@ def index():
     return render_template('sensors/index.html', sensors=sensors, columns=cols, rows=rows)
 
 @sensors.route('/create', methods=['GET','POST'])
+@login_required
 def create():
     if request.method == 'GET':
         return render_template('sensors/create.html')
@@ -32,6 +33,7 @@ def create():
         return redirect(url_for('sensors.index'))
     
 @sensors.route('/delete', methods=['GET','POST'])
+@login_required
 def delete():
     if request.method == 'GET':
         sensors = Sensor.query.all()
@@ -53,6 +55,7 @@ def delete():
         
 
 @sensors.route('/edit', methods=['GET','POST'])
+@login_required
 def edit():
     if request.method == 'GET':
         return render_template('sensors/edit.html')

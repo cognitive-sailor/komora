@@ -27,15 +27,22 @@ def register_user_routes(app, db, bcrypt):
             password = request.form.get('password')
             role = request.form.get('role')
             desc = request.form.get('description')
-            desc = desc if desc != '' else None # dodaj opis, če ga je uporabnik definiral
+            desc = desc if desc != '' else None # if defined, add description
 
-            hashed_password = bcrypt.generate_password_hash(password)
+            # Check if user already exists
+            existing_users = User.query.all()
+            existing_usernames = [user.username for user in existing_users]
 
-            user = User(username=username, password=hashed_password, role=role, description=desc) # dodaj novega uporabnika
+            if username not in existing_usernames:
+                hashed_password = bcrypt.generate_password_hash(password) # store only hash of the passwd into the database
 
-            db.session.add(user)
-            db.session.commit()
-            return redirect(url_for('users.index'))
+                user = User(username=username, password=hashed_password, role=role, description=desc) # add new user
+
+                db.session.add(user)
+                db.session.commit()
+                return redirect(url_for('users.index'))
+            else:
+                return render_template('users/user_exists.html')
 
 
     @users.route('/login', methods=['GET', 'POST'])

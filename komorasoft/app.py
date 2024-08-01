@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -23,6 +23,10 @@ def create_app():
     def load_user(uid):
         return User.query.get(uid)
     
+    @login_manager.unauthorized_handler
+    def unauthorized_callback():
+        return redirect(url_for('core.not_authorized'))
+
     bcrypt = Bcrypt(app)
 
     from komorasoft.blueprints.users.routes import register_user_routes
@@ -34,11 +38,15 @@ def create_app():
     from komorasoft.blueprints.actuators.routes import actuators
     from komorasoft.blueprints.core.routes import core
     from komorasoft.blueprints.users.routes import users
+    from komorasoft.blueprints.manual.routes import manual
+    from komorasoft.blueprints.auto.routes import auto
 
     app.register_blueprint(core, url_prefix='/')
     app.register_blueprint(users, url_prefix='/users')
     app.register_blueprint(sensors, url_prefix='/sensors')
     app.register_blueprint(actuators, url_prefix='/actuators')
+    app.register_blueprint(manual, url_prefix='/manual')
+    app.register_blueprint(auto, url_prefix='/auto')
 
 
     migrate = Migrate(app, db)

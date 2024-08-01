@@ -44,9 +44,9 @@
 {% if current_user.role == "Administrator" %}
 <div align="right">
     <form action="{{ url_for('actuators.create') }}" method="post">
-        <input type="text" name="naziv" placeholder="Naziv" required="required">
-        <input type="text" name="description" placeholder="Opis">
-        <button type="submit" class="btn btn-dark">Dodaj aktuator</button>
+        <input class="align-middle" type="text" name="naziv" placeholder="Naziv" required="required" style="height: 38px;">
+        <input class="align-middle" type="text" name="description" placeholder="Opis" style="height: 38px;">
+        <button type="submit" class="btn btn-dark align-middle" style="height: 40px;">Dodaj aktuator</button>
     </form>
 </div>
 {% endif %}
