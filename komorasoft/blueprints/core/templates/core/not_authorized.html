@@ -4,7 +4,7 @@
 {% block content %}
     <div class="container" align="center">
         <div class="card bg-dark" style="width: 18rem;">
-            <img src="../../../../static/images/person-exclamation.svg" class="card-img-top" alt="Nisi vpisan!">
+            <img src="{{url_for('core.static',filename='images/person-exclamation.svg')}}" class="card-img-top" alt="Nisi vpisan!">
             <div class="card-body">
               <h5 class="card-title">Niste vpisani!</h5>
               <p class="card-text">Za izvedbo tega dejanja morate biti vpisani. Če še nimate svojega računa, si ga ustvarite.</p>

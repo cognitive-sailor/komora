@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from komorasoft.app import db
 from komorasoft.blueprints.sensors.models import Sensor
 
-sensors = Blueprint('sensors', __name__, template_folder='templates')
+sensors = Blueprint('sensors', __name__, static_folder='static', template_folder='templates')
 
 @sensors.route('/')
 def index():
@@ -25,12 +25,18 @@ def create():
         desc = desc if desc != '' else None # dodaj opis, če ga je uporabnik definiral
         state = False # preveri dejansko stanje senzorja!
 
-        sensor = Sensor(name=name, description=desc, state=state) # dodaj nov senzor
+        existing_sensors = Sensor.query.all() # get all sensors
+        sensor_names = [sensor.name for sensor in existing_sensors] # get all sensor names
 
-        db.session.add(sensor)
-        db.session.commit()
+        if name not in sensor_names:
+            sensor = Sensor(name=name, description=desc, state=state) # dodaj nov senzor
 
-        return redirect(url_for('sensors.index'))
+            db.session.add(sensor)
+            db.session.commit()
+
+            return redirect(url_for('sensors.index'))
+        else:
+            return render_template('sensors/sensor_exists.html')
     
 @sensors.route('/delete', methods=['GET','POST'])
 @login_required

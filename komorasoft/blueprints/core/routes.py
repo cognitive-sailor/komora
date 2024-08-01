@@ -2,7 +2,7 @@ from flask import render_template, Blueprint
 
 from komorasoft.app import db
 
-core = Blueprint('core', __name__, template_folder='templates')
+core = Blueprint('core', __name__, static_folder='static', template_folder='templates')
 
 @core.route('/')
 def index():

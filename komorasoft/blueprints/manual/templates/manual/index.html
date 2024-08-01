@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Senzorji{% endblock %}
+
+{% block content %}
+<head>
+    <link href="{{ url_for('manual.static', filename='css/styles.css') }}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> <!-- Use full jQuery library -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<div class="container mt-5">
+    <div class="row">
+        {% for actuator in actuators %}
+        <div class="col-md-4 mb-4">
+            <div class="card toggle-card" id="card-{{ actuator.sid }}" data-device-id="{{ actuator.sid }}" data-toggle="popover" title="{{ actuator.description }}">
+                <div class="card-title {% if actuator.state %}bg-on{% else %}bg-off{% endif %}">
+                    {{ actuator.name }}
+                </div>
+                <div class="card-body">
+                    <div class="card-image text-center" style="height: 150px;">
+                        <img src="{{ url_for('manual.static', filename='images/' ~ actuator.sid ~ '.png') }}" id="img-{{ actuator.sid }}" class="img-fluid" alt="{{ actuator.name }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        // Initialize Bootstrap popovers
+        $('[data-toggle="popover"]').popover({
+            trigger: 'hover',
+            html: true // Allows HTML content in popover
+        });
+
+        // Handle card click event
+        $('.toggle-card').click(function(){
+            var card = $(this);
+            var deviceId = card.data('device-id'); // Correctly use data-device-id
+            var titleElement = card.find('.card-title');
+
+            $.ajax({
+                type: 'POST',
+                url: 'toggle_device',
+                data: JSON.stringify({ device_id: deviceId }),
+                contentType: 'application/json;charset=UTF-8',
+                success: function(response) {
+                    var newState = response.new_state;
+                    if(newState) {
+                        titleElement.removeClass('bg-off').addClass('bg-on');
+                    } else {
+                        titleElement.removeClass('bg-on').addClass('bg-off');
+                    }
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

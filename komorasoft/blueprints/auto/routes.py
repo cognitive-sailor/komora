@@ -9,4 +9,4 @@ auto = Blueprint('auto', __name__, template_folder='templates')
 
 @auto.route('/')
 def index():
-    return 'Hello'
+    return render_template('auto/index.html')

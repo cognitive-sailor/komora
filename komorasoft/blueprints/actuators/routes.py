@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from komorasoft.app import db
 from komorasoft.blueprints.actuators.models import Actuator
 
-actuators = Blueprint('actuators', __name__, template_folder='templates')
+actuators = Blueprint('actuators', __name__, static_folder='static', template_folder='templates')
 
 
 @actuators.route('/')
@@ -26,12 +26,18 @@ def create():
         desc = desc if desc != '' else None # dodaj opis, če ga je uporabnik definiral
         state = False # preveri dejansko stanje aktuatorja!
 
-        actuator = Actuator(name=name, description=desc, state=state) # dodaj nov aktuator
+        existing_actuators = Actuator.query.all() # get all sensors
+        actuator_names = [actuator.name for actuator in existing_actuators] # get all sensor names
 
-        db.session.add(actuator)
-        db.session.commit()
+        if name not in actuator_names:
+            actuator = Actuator(name=name, description=desc, state=state) # dodaj nov aktuator
 
-        return redirect(url_for('actuators.index'))
+            db.session.add(actuator)
+            db.session.commit()
+
+            return redirect(url_for('actuators.index'))
+        else:
+            return render_template('actuators/actuator_exists.html')
     
 @actuators.route('/delete', methods=['GET','POST'])
 @login_required
