@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Event</title>
+</head>
+<body>
+    <form action="{{url_for('auto.add_schedule')}}">
+        <button type="submit"><h1>Dodaj default urnik!</h1></button>
+    </form>
+    <h1>Add Event</h1>
+    <form id="eventForm">
+        <label for="actuator_name">Actuator Name:</label>
+        <input type="text" id="actuator_name" name="actuator_name" required>
+        <br>
+        <label for="state">State (true/false):</label>
+        <input type="text" id="state" name="state" required>
+        <br>
+        <label for="offset">Offset (ISO 8601 duration):</label>
+        <input type="text" id="offset" name="offset" required>
+        <br>
+        <label for="schedule_id">Schedule ID:</label>
+        <input type="text" id="schedule_id" value={{schedules[0].schedule_id}} name="schedule_id" required>
+        <br>
+        <button type="submit">Add Event</button>
+    </form>
+    <div>
+        <h1>Schedules:</h1>
+        {% for schedule in schedules %}
+            <p>{{schedule}}</p>
+        {% endfor %}
+        <h1>Events:</h1>
+        {% for event in events %}
+            <p>{{event}}</p>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.getElementById('eventForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const actuatorName = document.getElementById('actuator_name').value;
+            const state = document.getElementById('state').value === 'true';  // Convert to boolean
+            const offset = document.getElementById('offset').value;
+            const scheduleId = document.getElementById('schedule_id').value;
+
+            const data = {
+                actuator_name: actuatorName,
+                state: state,
+                offset: offset,
+                schedule_id: scheduleId
+            };
+
+            fetch('add_event', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
