@@ -1,4 +1,5 @@
 from komorasoft.app import db
+from sqlalchemy import UniqueConstraint
 
 
 class Actuator(db.Model):
@@ -8,6 +9,10 @@ class Actuator(db.Model):
     name = db.Column(db.String, nullable=False)
     state = db.Column(db.Boolean, nullable=False)
     description = db.Column(db.String)
+
+    __table_args__ = (
+        UniqueConstraint('name', name='uq_name'),
+    )
     
 
     def __repr__(self):
