@@ -1,0 +1,14 @@
+body{
+    background-color: rgb(63, 96, 72);
+    width: 100%;
+}
+h1{
+    color: rgba(209, 255, 202, 0.774);
+    }
+h3{ color: rgba(209, 255, 202, 0.774)}
+p{
+    color: rgb(123, 143, 107);
+}
+a{
+    color: #afd04d;
+}

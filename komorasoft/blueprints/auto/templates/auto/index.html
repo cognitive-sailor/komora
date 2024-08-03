@@ -1,145 +1,117 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Schedules and Events</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}Upravljanje po protokolu{% endblock %}
+
+
+{% block content %}
 
 <div class="container-fluid">
     <div class="row">
         <!-- Left Column -->
-        <div class="col-md-4">
-            <!-- Existing Schedules Table -->
-            <h3>Existing Schedules</h3>
-            <table class="table table-striped" id="schedulesTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Start Time</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Existing schedules will be inserted here by JavaScript -->
-                </tbody>
-            </table>
+        <div class="col-md-4 col-sm-12 fixed-width-column">
+            <h3>Obstoječi protokoli</h3>
+            <div class="scrollable-table-container">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="schedulesTable">
+                        <thead>
+                            <tr>
+                                <th>Naziv</th>
+                                <th>Opis</th>
+                                <th>Čas začetka</th>
+                                <th>Dejanja</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Existing schedules will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div><br>
 
-            <!-- Input Group for New Schedule -->
-            <h4>Add New Schedule</h4>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createScheduleModal">
+                Dodaj nov protokol
+            </button>
+            <!-- <h4>Dodaj nov protokol</h4>
             <form id="newScheduleForm">
                 <div class="form-group">
-                    <label for="scheduleName">Name</label>
+                    <label for="scheduleName">Naziv</label>
                     <input type="text" class="form-control" id="scheduleName" required>
                 </div>
                 <div class="form-group">
-                    <label for="scheduleDescription">Description</label>
+                    <label for="scheduleDescription">Opis</label>
                     <input type="text" class="form-control" id="scheduleDescription">
                 </div>
                 <div class="form-group">
-                    <label for="scheduleStartTime">Start Time</label>
+                    <label for="scheduleStartTime">Čas začetka</label>
                     <input type="datetime-local" class="form-control" id="scheduleStartTime" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Add Schedule</button>
-            </form>
+                <button type="submit" class="btn btn-primary">Dodaj protokol</button>
+            </form> -->
         </div>
 
         <!-- Right Column -->
         <div class="col-md-8">
-            <!-- Actuator Events Table -->
-            <h3>Actuator Events</h3>
-            <table class="table table-striped" id="eventsTable">
-                <thead>
-                    <tr>
-                        <th>Actuator Name</th>
-                        <th>State</th>
-                        <th>Offset</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Actuator events will be inserted here by JavaScript -->
-                </tbody>
-            </table>
+            <h3 id="eventsHeading">Dogodki aktuatorjev</h3>
+            <div class="scrollable-table-container">
+                <div class="table-responsive events" id="eventsDiv">
+                    <table class="table table-striped table-borderless" id="eventsTable">
+                        <thead>
+                            <tr>
+                                <th>Naziv aktuatorja</th>
+                                <th>Stanje</th>
+                                <th>Zamik [s]</th>
+                                <th>Abs čas</th>
+                                <th>Dejanja</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Actuator events will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div><br>
 
-            <!-- Input Group for New Actuator Event -->
-            <h4>Add New Actuator Event</h4>
+            <h4>Dodaj dogodek aktuatorja</h4>
             <form id="newEventForm">
                 <div class="form-group">
-                    <label for="actuatorName">Actuator Name</label>
+                    <label for="actuatorName">Naziv aktuatorja</label>
                     <input type="text" class="form-control" id="actuatorName" required>
                 </div>
                 <div class="form-group">
-                    <label for="eventState">State (true/false)</label>
+                    <label for="eventState">Stanje (true/false)</label>
                     <input type="text" class="form-control" id="eventState" required>
                 </div>
                 <div class="form-group">
-                    <label for="eventOffset">Offset (ISO 8601 duration)</label>
+                    <label for="eventOffset">Zamik (ISO 8601 duration)</label>
                     <input type="text" class="form-control" id="eventOffset" required>
                 </div>
-                <div class="form-group">
-                    <label for="eventScheduleId">Schedule ID</label>
-                    <input type="text" class="form-control" id="eventScheduleId" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Add Event</button>
+                <input type="text" class="form-control" id="createEventScheduleId" required>
+                <button type="submit" class="btn btn-primary">Dodaj dogodek</button>
             </form>
         </div>
     </div>
 </div>
 
 <!-- Bootstrap Modals -->
-<!-- Edit Schedule Modal -->
-<div class="modal fade" id="editScheduleModal" tabindex="-1" role="dialog" aria-labelledby="editScheduleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editScheduleModalLabel">Edit Schedule</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editScheduleForm">
-                    <input type="hidden" id="editScheduleId">
-                    <div class="form-group">
-                        <label for="editScheduleName">Name</label>
-                        <input type="text" class="form-control" id="editScheduleName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editScheduleDescription">Description</label>
-                        <input type="text" class="form-control" id="editScheduleDescription">
-                    </div>
-                    <div class="form-group">
-                        <label for="editScheduleStartTime">Start Time</label>
-                        <input type="datetime-local" class="form-control" id="editScheduleStartTime" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Confirm</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+{% include 'auto/schedule_create.html' %}
+{% include 'auto/schedule_edit.html' %}
+{% include 'auto/schedule_remove.html' %}
 
 <!-- Delete Schedule Modal -->
 <div class="modal fade" id="deleteScheduleModal" tabindex="-1" role="dialog" aria-labelledby="deleteScheduleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteScheduleModalLabel">Delete Schedule</h5>
+                <h5 class="modal-title" id="deleteScheduleModalLabel">Izbriši protokol</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this schedule?</p>
+                <p>Ste prepričani, da želite izbrisati ta protokol?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteSchedule">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Prekliči</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteSchedule">Izbriši</button>
             </div>
         </div>
     </div>
@@ -149,6 +121,5 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{{url_for('auto.static', filename='js/app.js')}}"></script>
-</body>
-</html>
+<script src="{{ url_for('auto.static', filename='js/app.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,32 @@
+<!-- Modal -->
+<div class="modal fade" id="modalEdit{{ loop.index }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel{{ loop.index }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalLabel{{ loop.index }}">Uredi aktuator</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Želiš spremeniti aktuator:    <b>{{ row[1] }}</b>?</p>
+            </div>
+            <div class="container" align="center">
+                <form action="{{ url_for('auto.edit') }}" method="post">
+                    <input name="name_old" placeholder="{{ row[1] }}" value="{{row[1]}}" hidden>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1" style="width: 100px;">Naziv</span>
+                        <input type="text" class="form-control" id="input_name" name="name" placeholder="{{ row[1] }}" value="{{ row[1] }}" required="required" aria-label="{{ row[1] }}" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1" style="width: 100px;">Opis</span>
+                        <input type="text" class="form-control" id="desc" name="description" placeholder="{{ row[3] }}" value="{{ row[3] }}" aria-label="{{ row[3] }}" aria-describedby="basic-addon1">
+                    </div>
+                    <!-- <input id="input_name" name="name" placeholder="{{ row[1] }}" required="required"><br> -->
+                    <!-- <input id="desc" name="description" placeholder="{{ row[3] }}"> -->
+                    <button type="submit" class="btn btn-primary">OK</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button><br><br>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+<!-- Edit Schedule Modal -->
+<div class="modal fade" id="editScheduleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="editScheduleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5" id="editScheduleModalLabel" style="color: chartreuse;">Uredi protokol</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"><br>
+                <form id="editScheduleForm" action="{{url_for('auto.edit_schedule')}}" method="POST">
+                    <input type="hidden" id="editScheduleId" name="schedule_id">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-success-subtle" id="basic-addon1" style="width: 100px;">Naziv</span>
+                        <input type="text" class="form-control" placeholder="Naziv protokola" aria-label="Naziv protokola" aria-describedby="basic-addon1" id="editScheduleName" name="name" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-success-subtle" style="width: 100px;">Opis</span>
+                        <input type="text" class="form-control" placeholder="Opiši protokol" aria-label="Opiši protokol" aria-describedby="basic-addon1" id="editScheduleDescription" name="description" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-success-subtle" style="width: 100px;">Čas začetka</span>
+                        <input type="datetime-local" class="form-control" placeholder="Čas začetka" aria-label="Določi čas začetka" aria-describedby="basic-addon1" id="editScheduleStartTime" name="start_time" required>
+                    </div><br>
+                    <div align="right">
+                        <button type="submit" class="btn btn-primary">Potrdi</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

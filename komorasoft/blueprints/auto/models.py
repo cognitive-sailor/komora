@@ -13,10 +13,6 @@ class ActuatorEvent(db.Model):
     offset = db.Column(db.Interval, nullable=False)
     schedule_id = db.Column(db.String, db.ForeignKey('schedules.schedule_id'), nullable=False)
 
-    __table_args__ = (
-        UniqueConstraint('actuator_name', name='uq_actuator_name'),
-    )
-
     def __repr__(self) -> str:
         return f"{self.actuator_name} ActuatorEvent: time = {self.offset}, state = {self.state}. Belongs to {self.schedule_id}"
 
