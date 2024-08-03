@@ -4,16 +4,22 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 
+# from komorasoft.blueprints.actuators.models import default_db
+# from komorasoft.blueprints.auto.models import schedule_db
+
 
 db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__, template_folder='templates')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./blueprints.db'
+    # Configure SQLAlchemy with multiple databases
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./blueprints.db'  # Default database URI
+    app.config['SQLALCHEMY_BINDS'] = {
+        'schedule_db': 'sqlite:///schedule.db'  # Additional database URI
+    }
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    app.secret_key = 'some key'
-
-    db.init_app(app)
+    app.secret_key = 'a7d14b1b2a7ce906887ff28c5b211e1d6933fa9e8215fa843e8dc6b2e639b92aff2a33b715a9c240a8894457fda82e5d09536235774316e577052ee4cda58a40'
 
     login_manager = LoginManager()
     login_manager.init_app(app)
@@ -47,8 +53,10 @@ def create_app():
     app.register_blueprint(actuators, url_prefix='/actuators')
     app.register_blueprint(manual, url_prefix='/manual')
     app.register_blueprint(auto, url_prefix='/auto')
-
-
+    
+    db.init_app(app)
     migrate = Migrate(app, db)
-
+    with app.app_context():
+        db.create_all()  # This will create tables in the default database
+        
     return app

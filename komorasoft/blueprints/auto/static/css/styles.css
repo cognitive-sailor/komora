@@ -1,0 +1,49 @@
+/* Ensure columns do not exceed their container's width */
+.fixed-width-column {
+    max-width: 33.3333%;
+    flex: 0 0 33.3333%;
+    overflow-x: auto;
+    word-wrap: break-word; /* Handle long words or text */
+}
+
+.col-md-8 {
+    overflow-x: auto;
+    word-wrap: break-word; /* Handle long words or text */
+}
+
+/* Container to handle scrolling */
+.scrollable-table-container {
+    height: 500px; /* Set your desired maximum height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border-radius: 10px;
+}
+
+/* Ensure tables within columns are responsive */
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Make sure the table fits within its container */
+.table {
+    width: 100%; /* Ensure the table takes up the full width of the container */
+    border-collapse: collapse; /* Optional: collapse table borders */
+    --bs-table-bg: rgb(216, 255, 203);
+}
+
+/* Optional: styling for table headers and cells */
+.table th, .table td {
+    border: 1px solid #ddd; /* Add border to cells */
+    padding: 8px; /* Add padding to cells */
+    text-align: left; /* Align text to the left */
+}
+
+table#schedulesTable tbody tr.selected-row {
+    --bs-table-bg: rgb(99, 143, 99);
+}
+
+table#eventsTable {
+    --bs-table-bg: rgb(99, 143, 99);
+}
