@@ -7,7 +7,7 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Left Column -->
-        <div class="col-md-4 col-sm-12 fixed-width-column">
+        <div class="col-md-5">
             <h3>Obstoječi protokoli</h3>
             <div class="scrollable-table-container">
                 <div class="table-responsive">
@@ -30,26 +30,10 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createScheduleModal">
                 Dodaj nov protokol
             </button>
-            <!-- <h4>Dodaj nov protokol</h4>
-            <form id="newScheduleForm">
-                <div class="form-group">
-                    <label for="scheduleName">Naziv</label>
-                    <input type="text" class="form-control" id="scheduleName" required>
-                </div>
-                <div class="form-group">
-                    <label for="scheduleDescription">Opis</label>
-                    <input type="text" class="form-control" id="scheduleDescription">
-                </div>
-                <div class="form-group">
-                    <label for="scheduleStartTime">Čas začetka</label>
-                    <input type="datetime-local" class="form-control" id="scheduleStartTime" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Dodaj protokol</button>
-            </form> -->
         </div>
 
         <!-- Right Column -->
-        <div class="col-md-8">
+        <div class="col">
             <h3 id="eventsHeading">Dogodki aktuatorjev</h3>
             <div class="scrollable-table-container">
                 <div class="table-responsive events" id="eventsDiv">
@@ -69,24 +53,11 @@
                     </table>
                 </div>
             </div><br>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createEventModal">
+                Dodaj nov dogodek
+            </button>
 
-            <h4>Dodaj dogodek aktuatorja</h4>
-            <form id="newEventForm">
-                <div class="form-group">
-                    <label for="actuatorName">Naziv aktuatorja</label>
-                    <input type="text" class="form-control" id="actuatorName" required>
-                </div>
-                <div class="form-group">
-                    <label for="eventState">Stanje (true/false)</label>
-                    <input type="text" class="form-control" id="eventState" required>
-                </div>
-                <div class="form-group">
-                    <label for="eventOffset">Zamik (ISO 8601 duration)</label>
-                    <input type="text" class="form-control" id="eventOffset" required>
-                </div>
-                <input type="text" class="form-control" id="createEventScheduleId" required>
-                <button type="submit" class="btn btn-primary">Dodaj dogodek</button>
-            </form>
+
         </div>
     </div>
 </div>
@@ -96,26 +67,9 @@
 {% include 'auto/schedule_edit.html' %}
 {% include 'auto/schedule_remove.html' %}
 
-<!-- Delete Schedule Modal -->
-<div class="modal fade" id="deleteScheduleModal" tabindex="-1" role="dialog" aria-labelledby="deleteScheduleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteScheduleModalLabel">Izbriši protokol</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Ste prepričani, da želite izbrisati ta protokol?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Prekliči</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteSchedule">Izbriši</button>
-            </div>
-        </div>
-    </div>
-</div>
+{% include 'auto/event_create.html' %}
+{% include 'auto/event_edit.html' %}
+{% include 'auto/event_remove.html' %}
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

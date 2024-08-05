@@ -1,15 +1,15 @@
-<!-- remove Schedule Modal -->
-<div class="modal fade" id="removeScheduleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="editScheduleModalLabel" aria-hidden="true">
+<!-- remove Event Modal -->
+<div class="modal fade" id="removeEventModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="removeEventModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content bg-dark">
             <div class="modal-header">
-                <h5 class="modal-title fs-5" id="removeScheduleModalLabel" style="color: chartreuse;">Izbriši protokol</h5>
+                <h5 class="modal-title fs-5" id="removeEventModalLabel" style="color: chartreuse;">Izbriši dogodek</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body"><br>
-                <p id="scheduleDeleteMessage">Ste prepričani, da želite izbrisati ta protokol?</p>
-                <form id="removeScheduleForm" action="{{url_for('auto.remove_schedule')}}" method="POST">
-                    <input id="removeScheduleId" name="schedule_id" hidden>
+                <p id="eventDeleteMessage">Ste prepričani, da želite izbrisati ta dogodek?</p>
+                <form id="removeEventForm" action="{{url_for('auto.remove_event')}}" method="POST">
+                    <input id="removeEventId" name="event_id" hidden>
                     <div align="right">
                         <button type="submit" class="btn btn-primary">Potrdi</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>

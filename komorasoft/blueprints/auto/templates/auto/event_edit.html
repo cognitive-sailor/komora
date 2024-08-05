@@ -1,32 +1,101 @@
-<!-- Modal -->
-<div class="modal fade" id="modalEdit{{ loop.index }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel{{ loop.index }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<!-- edit Event Modal -->
+<div class="modal fade" id="editEventModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="editEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 60%;">
         <div class="modal-content bg-dark">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modalLabel{{ loop.index }}">Uredi aktuator</h1>
+                <h5 class="modal-title fs-5" id="editEventModalLabel" style="color: chartreuse;">Uredi dogodek</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <p>Želiš spremeniti aktuator:    <b>{{ row[1] }}</b>?</p>
-            </div>
-            <div class="container" align="center">
-                <form action="{{ url_for('auto.edit') }}" method="post">
-                    <input name="name_old" placeholder="{{ row[1] }}" value="{{row[1]}}" hidden>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1" style="width: 100px;">Naziv</span>
-                        <input type="text" class="form-control" id="input_name" name="name" placeholder="{{ row[1] }}" value="{{ row[1] }}" required="required" aria-label="{{ row[1] }}" aria-describedby="basic-addon1">
+            <div class="modal-body"><br>
+                <form id="editEventForm" action="{{url_for('auto.edit_event')}}" method="POST">
+                    <h5 style="color: rgb(255, 255, 255);">Aktuator</h5>
+                    <input type="hidden" id="editEventId" name="editEventId">
+                    <div class="row g-2">
+                        <div class="col-md-8">
+                            <div class="form-floating" required>
+                                <select class="form-select" id="actuatorSelectEdit" aria-label="Izberi aktuator", name="izbran_aktuator">
+                                <option selected id="selectedOptionActuator">Izbran aktuator</option>
+                                        <!-- JS will populate options with available actuators here -->
+                                </select>
+                                <label for="floatingSelect">Izberi aktuator</label>
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault2" name="status_aktuatorja">
+                                <label class="form-check-label" for="flexSwitchCheckDefault2" style="color: white;">Vklop/Izklop</label>
+                              </div>
+                        </div>
+                    </div><br><br>
+
+
+
+                    <h5 style="color: rgb(255, 255, 255);">Čas od začetka izvajanja protokola</h5>
+                    <div class="row g-2">
+                        <div class="col">
+                            <!-- Dnevi -->
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Dan" aria-label="Dan" aria-describedby="basic-addon2" value="0" id="dni" name="dniE" required>
+                                <span class="input-group-text" id="dan">dni</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Ure -->
+                            <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Ura" aria-label="Ura" aria-describedby="basic-addon2" value="0" id="ur" name="urE" required>
+                            <span class="input-group-text" id="basic-addon2">ur</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Minute -->
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Minuta" aria-label="Minuta" aria-describedby="basic-addon2" value="0" id="minut" name="minutE" required>
+                                <span class="input-group-text" id="basic-addon2">minut</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Sekunde -->
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Sekunda" aria-label="Sekunda" aria-describedby="basic-addon2" value="0" id="sekund" name="sekundE" required>
+                                <span class="input-group-text" id="basic-addon2">sekund</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1" style="width: 100px;">Opis</span>
-                        <input type="text" class="form-control" id="desc" name="description" placeholder="{{ row[3] }}" value="{{ row[3] }}" aria-label="{{ row[3] }}" aria-describedby="basic-addon1">
+
+                    <div align="right">
+                        <button type="submit" class="btn btn-primary">Potrdi</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>
                     </div>
-                    <!-- <input id="input_name" name="name" placeholder="{{ row[1] }}" required="required"><br> -->
-                    <!-- <input id="desc" name="description" placeholder="{{ row[3] }}"> -->
-                    <button type="submit" class="btn btn-primary">OK</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button><br><br>
                 </form>
-                
             </div>
         </div>
     </div>
 </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // Function to fetch actuators and populate the select element
+    function populateActuators() {
+        fetch('/auto/get_actuators', { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
+                const actuatorSelectEdit = document.getElementById('actuatorSelectEdit');
+                actuatorSelectEdit.innerHTML = '<option selected="false"> </option>';  // Clear existing options
+
+                data.forEach(actuator => {
+                    const option = document.createElement('option');
+                    option.value = actuator.name;
+                    option.textContent = actuator.name;
+                    actuatorSelectEdit.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading actuators:', error));
+    }
+
+    // Event listener to populate actuators when the modal is shown
+    const editEventModal = document.getElementById('editEventModal');
+    editEventModal.addEventListener('show.bs.modal', populateActuators);
+});
+</script>
+    

@@ -1,15 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadSchedules();
-    loadEvents(); 
+    // loadEvents(); 
 
     const heading = document.getElementById('eventsHeading');
     heading.textContent = `Dogodki aktuatorjev`;
-
-    document.getElementById('newScheduleForm').addEventListener('submit', addSchedule);
-    document.getElementById('newEventForm').addEventListener('submit', addEvent);
-
-    document.getElementById('editScheduleForm').addEventListener('submit', updateSchedule);
-    document.getElementById('confirmDeleteSchedule').addEventListener('click', deleteSchedule);
 });
 
 function loadSchedules() {
@@ -85,8 +79,14 @@ function handleRowClick(scheduleId, scheduleName="", reset=true) {
                     <td>${event.offset}</td>
                     <td>${event.absolute_time}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" onclick="editEvent('${event.id}')">Uredi</button>
-                        <button class="btn btn-danger btn-sm" onclick="confirmDeleteEvent('${event.id}')">Odstrani</button>
+                        <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-dark btn-icon" data-bs-toggle="modal" data-bs-target="#editEventModal" onclick="editEvent('${event.id}')">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <button class="btn btn-danger btn-icon" data-bs-toggle="modal" data-bs-target="#removeEventModal" onclick="deleteEvent('${event.id}')">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                        </div>
                     </td>
                 `;
                 tableBody.appendChild(row);
@@ -112,8 +112,8 @@ function loadEvents() {
                     <td>${event.offset}</td>
                     <td>${event.offset}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" onclick="editEvent('${event.id}')">Uredi</button>
-                        <button class="btn btn-danger btn-sm" onclick="confirmDeleteEvent('${event.id}')">Odstrani</button>
+                        <button class="btn btn-warning btn-sm" onclick="editEvent('${event.event_id}')">Uredi</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteEvent('${event.event_id}')">Odstrani</button>
                     </td>
                 `;
                 tableBody.appendChild(row);
@@ -174,15 +174,29 @@ function editSchedule(scheduleId) {
     }
 
 
-function confirmDeleteSchedule(scheduleId) {
-    // Implement this function to show a confirmation modal for schedule deletion
-    
+function editEvent(eventId) {
+    fetch(`get_event/${eventId}`, { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('Error:', data.error);
+                return;
+            }
+
+            // Populate the form with the existing data
+            document.getElementById('editEventId').value = eventId;
+            document.getElementById('actuatorSelectEdit').value = data.name;
+            document.getElementById('flexSwitchCheckDefault2').checked = data.state;
+            
+            
+            document.getElementById('dni').value = data.days;
+            document.getElementById('ur').value = data.hours;
+            document.getElementById('minut').value = data.minutes;
+            document.getElementById('sekund').value = data.seconds;
+        })
+        .catch(error => console.error('Error fetching Event data:', error));
 }
 
-function updateSchedule(event) {
-    event.preventDefault();
-    // Implement this function to handle the form submission for updating a schedule
-}
 
 function deleteSchedule(scheduleId) {
     // Implement this function to delete the selected schedule
@@ -196,10 +210,27 @@ function deleteSchedule(scheduleId) {
     
                 // Populate the form with the existing data
                 document.getElementById('removeScheduleId').value = scheduleId;
-                document.getElementById('removeScheduleName').value = data.name;
-                document.getElementById('removeScheduleDescription').value = data.description;
-                document.getElementById('removeScheduleStartTime').value = data.start_time;  // datetime-local expects ISO format
+                // document.getElementById('removeScheduleName').value = data.name;
+                // document.getElementById('removeScheduleDescription').value = data.description;
+                // document.getElementById('removeScheduleStartTime').value = data.start_time;  // datetime-local expects ISO format
                 document.getElementById('scheduleDeleteMessage').textContent = `Ali ste prepričani, da želite odstraniti protokol ${data.name}?`;
             })
             .catch(error => console.error('Error fetching schedule data:', error));
+}
+
+function deleteEvent(eventId) {
+    // Implement this function to delete the selected schedule
+    fetch(`get_event/${eventId}`, { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    return;
+                }
+    
+                // Populate the form with the existing data
+                document.getElementById('removeEventId').value = eventId;
+                document.getElementById('eventDeleteMessage').textContent = `Ali ste prepričani, da želite odstraniti dogodek ${data.name}?`;
+            })
+            .catch(error => console.error('Error fetching event data:', error));
 }

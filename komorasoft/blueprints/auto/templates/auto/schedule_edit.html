@@ -8,9 +8,9 @@
             </div>
             <div class="modal-body"><br>
                 <form id="editScheduleForm" action="{{url_for('auto.edit_schedule')}}" method="POST">
-                    <input type="hidden" id="editScheduleId" name="schedule_id">
+                    <input id="editScheduleId" name="schedule_id" hidden>
                     <div class="input-group mb-3">
-                        <span class="input-group-text bg-success-subtle" id="basic-addon1" style="width: 100px;">Naziv</span>
+                        <span class="input-group-text bg-success-subtle" style="width: 100px;">Naziv</span>
                         <input type="text" class="form-control" placeholder="Naziv protokola" aria-label="Naziv protokola" aria-describedby="basic-addon1" id="editScheduleName" name="name" required>
                     </div>
                     <div class="input-group mb-3">
@@ -22,7 +22,7 @@
                         <input type="datetime-local" class="form-control" placeholder="Čas začetka" aria-label="Določi čas začetka" aria-describedby="basic-addon1" id="editScheduleStartTime" name="start_time" required>
                     </div><br>
                     <div align="right">
-                        <button type="submit" class="btn btn-primary">Potrdi</button>
+                        <button type="submit" class="btn btn-primary" id="confirmScheduleEdit">Potrdi</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>
                     </div>
                 </form>
