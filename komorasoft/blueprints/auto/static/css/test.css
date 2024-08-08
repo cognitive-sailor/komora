@@ -1,0 +1,88 @@
+/* styles.css */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #97b094;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 80%;
+}
+
+.resizable-box {
+    position: absolute;
+    width: 200px;
+    height: 50px;
+    background-color: #5b976d;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: none;
+    border-radius: 10px;
+}
+
+.resize-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #1f3f20;
+    border: none;
+    cursor: pointer;
+}
+
+.resize-handle.top-left {
+    top: 0;
+    left: 0;
+    cursor: nw-resize;
+}
+
+.resize-handle.top-right {
+    top: 0;
+    right: 0;
+    cursor: ne-resize;
+}
+
+.resize-handle.bottom-left {
+    bottom: 0;
+    left: 0;
+    cursor: sw-resize;
+}
+
+.resize-handle.bottom-right {
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+}
+
+.resize-handle.left {
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 100%;
+    cursor: ew-resize;
+}
+
+.resize-handle.right {
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 100%;
+    cursor: ew-resize;
+}
+
+.tooltip {
+    position: absolute;
+    background: #1e271d;
+    color: #ff9050;
+    padding: 5px;
+    border-radius: 3px;
+    display: none; /* Hide tooltip by default */
+}

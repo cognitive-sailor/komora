@@ -13,14 +13,15 @@
     <!-- Link to the CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <!-- AUTO Link to the CSS file -->
-    <link rel="stylesheet" href="{{ url_for('auto.static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('automatic.static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('automatic.static', filename='css/graph_editor.css') }}">
     
   </head>
   <body>
     
     {% include 'navbar.html' %}
     <br/>
-    <div class="container-lg">
+    <div id="main-container" class="container-xl">
         {% block content %}
         
         {% endblock %}

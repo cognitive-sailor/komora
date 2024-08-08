@@ -1,0 +1,28 @@
+<table class="scrollable-container" id="scrollable-container">
+    <tr class="myrow" id="temp_row"></tr>
+    <tr class="myrow" id="humi_row"></tr>
+</table>
+
+
+<script>
+    let Tcount = 0;
+    let Hcount = 0;
+
+    function addTemperatureBlock() {
+        const container = document.getElementById('temp_row');
+        const newDiv = document.createElement('td');
+        Tcount++
+        newDiv.className = 'child';
+        newDiv.textContent = 'T_'+Tcount;
+        container.appendChild(newDiv);
+    }
+    function addHumidityBlock() {
+        const container = document.getElementById('humi_row');
+        const newDiv = document.createElement('td');
+        Hcount++
+        newDiv.className = 'child';
+        newDiv.textContent = 'H_'+Hcount;
+        container.appendChild(newDiv);
+    }
+    
+</script>

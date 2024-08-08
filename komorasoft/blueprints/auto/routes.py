@@ -219,7 +219,6 @@ def get_actuators():
     return jsonify([{'sid': actuator.sid, 'name': actuator.name} for actuator in actuators])
 
 
-@auto.route('/test', methods=['POST'])
+@auto.route('/test')
 def test():
-    print("testing")
-    return "Test"
+    return render_template('auto/test.html')
