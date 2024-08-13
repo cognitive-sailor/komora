@@ -1,0 +1,144 @@
+h6 {
+    font-weight: bolder;
+}
+
+#simple-container1 {
+    background-color: rgb(75, 121, 83);
+    height: 620px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 0%;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.761);
+}
+
+#simple-row1 {
+    height: 100%;
+    padding: 0%;
+}
+
+#simple-col1 {
+    background-color: rgb(144, 167, 142);
+    height: 100%;
+    padding: 2%;
+    overflow: auto;
+}
+
+#simple-col2 {
+    background-color: rgb(208, 158, 117);
+    height: 100%;
+    padding: 2%;
+}
+
+#TempField {
+    justify-content: left;
+    align-content: center;
+}
+
+#TempField .custom-bg1 {
+    background-color: #b4b4b481; 
+    height: 100%; 
+    padding: 8px 12px;
+    border-color: black;
+}
+#TempField .custom-bg2 {
+    background-color: #3f3f3f7c; 
+    height: 100%; 
+    padding: 8px 12px;
+    border-color: black;
+    width: 10%;
+    color: aliceblue;
+    font-weight: bold;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    justify-content: center;
+    align-content: center;
+}
+
+#temperatureRange {
+    flex: 1;
+    height: 100%;
+    margin: 0 5px;
+}
+
+#optiParamsField {
+    width: 100%;
+    height: fit-content;
+}
+
+#collapseExample {
+    width: 100%;
+}
+
+.advancedMenu {
+    background-color: rgba(78, 78, 78, 0.387);
+    box-sizing: border-box;
+    overflow: hidden;
+    height: fit-content;
+    width: 100%;
+    padding: 5px;
+}
+
+.simpleRow {
+    height: 80px; /* Control the row height here */
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    align-items: stretch; /* Ensure all columns fill the row height */
+    margin: 2px; 
+    padding: 0px; 
+}
+
+.simpleCol {
+    height: 100%; /* Make sure each column fills the row height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center horizontally */
+    justify-items: center;
+    align-items: left;
+    padding: 5px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.simpleCol div {
+    white-space: normal;   /* Allow text to wrap to the next line */
+    word-wrap: break-word; /* Break words if they are too long to fit on one line */
+    overflow-wrap: break-word; /* Break long words and wrap them to the next line */
+    width: 100%;           /* Ensure the text block takes up the full width of the parent */
+    margin: 0;             /* Reset any default margins */
+}
+
+
+.simpleCol img {
+    max-width: 80%;
+    max-height: 80%;
+    overflow: hidden;
+}
+
+.timeDuration {
+    height: 100%;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.row-time {
+    max-height: 50%;
+    max-width: 100%;
+    padding: 2px;
+    /* box-sizing: border-box; */
+}
+
+.timeInput {
+    height: 100%;
+    padding: 0%;
+}
+
+.myselection {
+    height: 40;
+    max-height: 50px;
+    overflow: auto;
+}

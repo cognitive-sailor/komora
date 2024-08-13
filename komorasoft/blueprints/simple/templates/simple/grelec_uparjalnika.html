@@ -1,0 +1,72 @@
+<div class="row simpleRow">
+    <div class="col-md-1 simpleCol">
+        <img class="simpleImages" src="{{url_for('simple.static', filename='images/9.png')}}" alt="Grelec uparjalnika">
+    </div>
+    <div class="col-md-2 simpleCol">
+        <h6>Grelec uparjalnika</h6>
+    </div>
+    <div class="col-md-3 simpleCol">
+        <div class="row row-time">
+            <h7 class="col timeInput">INTERVAL -> Vklopi na vsake: </h7>
+        </div>
+        <div class="row row-time">
+            <h7 class="col timeInput">TRAJANJE -> za obdobje:</h7>
+        </div>
+    </div>
+    <div class="col  timeDuration">
+        <div class="row row-time">
+                <!-- <input type="text" class="col form-control-sm timeInput" placeholder="Dni" aria-label="Dni"> -->
+                <select class="col form-select form-select-sm myselection" id="grelecDaysSelect" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+                  <select class="col form-select form-select-sm myselection" id="grelecHoursSelect" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+                  <select class="col form-select form-select-sm myselection" id="grelecMinutesSelect" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+                  <select class="col form-select form-select-sm myselection" id="grelecSecondsSelect" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+        </div>
+        <div class="row row-time">
+            <div class="col-md-3"></div>
+            <select class="col form-select form-select-sm myselection" id="grelecHoursSelectDuration" aria-label="Small select example">
+            <!-- JS code here -->
+            </select>
+            <select class="col form-select form-select-sm myselection" id="grelecMinutesSelectDuration" aria-label="Small select example">
+            <!-- JS code here -->
+            </select>
+            <select class="col form-select form-select-sm myselection" id="grelecSecondsSelectDuration" aria-label="Small select example">
+            <!-- JS code here -->
+            </select>
+        </div>
+    </div>
+</div>
+
+<script>
+    function generateSelectOptions(selectElementId, rangeEnd, units) {
+    const selectElement = document.getElementById(selectElementId);
+    
+    // Clear existing options (optional)
+    selectElement.innerHTML = '';
+
+    // Create and append options
+    for (let i = 0; i <= rangeEnd; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `${i} ${units}`; // Adjust textContent as needed
+        selectElement.appendChild(option);
+        }
+    }
+
+    // Call the function to generate options from 0 to 31
+    generateSelectOptions('grelecDaysSelect', 30, 'dni');
+    generateSelectOptions('grelecHoursSelect', 23, 'ur');
+    generateSelectOptions('grelecMinutesSelect', 59, 'minut');
+    generateSelectOptions('grelecSecondsSelect', 59, 'sekund');
+
+    generateSelectOptions('grelecHoursSelectDuration', 23, 'ur');
+    generateSelectOptions('grelecMinutesSelectDuration', 59, 'minut');
+    generateSelectOptions('grelecSecondsSelectDuration', 59, 'sekund');
+</script>

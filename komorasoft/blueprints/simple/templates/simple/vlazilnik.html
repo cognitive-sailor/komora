@@ -1,0 +1,72 @@
+<div class="row simpleRow">
+    <div class="col-md-1 simpleCol">
+        <img class="simpleImages" src="{{url_for('simple.static', filename='images/7.png')}}" alt="Vlažilnik">
+    </div>
+    <div class="col-md-2 simpleCol">
+        <h6>Vlažnilnik</h6>
+    </div>
+    <div class="col-md-3 simpleCol">
+        <div class="row row-time">
+            <h7 class="col timeInput">INTERVAL -> Vklopi na vsake: </h7>
+        </div>
+        <div class="row row-time">
+            <h7 class="col timeInput">TRAJANJE -> za obdobje:</h7>
+        </div>
+    </div>
+    <div class="col  timeDuration">
+        <div class="row row-time">
+                <!-- <input type="text" class="col form-control-sm timeInput" placeholder="Dni" aria-label="Dni"> -->
+                <select class="col form-select form-select-sm myselection" id="vlazDaysSelect" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+                  <select class="col form-select form-select-sm myselection" id="vlazHoursSelect" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+                  <select class="col form-select form-select-sm myselection" id="vlazMinutesSelect" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+                  <select class="col form-select form-select-sm myselection" id="vlazSecondsSelect" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+        </div>
+        <div class="row row-time">
+            <div class="col-md-3"></div>
+            <select class="col form-select form-select-sm myselection" id="vlazHoursSelectDuration" aria-label="Small select example">
+            <!-- JS code here -->
+            </select>
+            <select class="col form-select form-select-sm myselection" id="vlazMinutesSelectDuration" aria-label="Small select example">
+            <!-- JS code here -->
+            </select>
+            <select class="col form-select form-select-sm myselection" id="vlazSecondsSelectDuration" aria-label="Small select example">
+            <!-- JS code here -->
+            </select>
+        </div>
+    </div>
+</div>
+
+<script>
+    function generateSelectOptions(selectElementId, rangeEnd, units) {
+    const selectElement = document.getElementById(selectElementId);
+    
+    // Clear existing options (optional)
+    selectElement.innerHTML = '';
+
+    // Create and append options
+    for (let i = 0; i <= rangeEnd; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `${i} ${units}`; // Adjust textContent as needed
+        selectElement.appendChild(option);
+        }
+    }
+
+    // Call the function to generate options from 0 to 31
+    generateSelectOptions('vlazDaysSelect', 30, 'dni');
+    generateSelectOptions('vlazHoursSelect', 23, 'ur');
+    generateSelectOptions('vlazMinutesSelect', 59, 'minut');
+    generateSelectOptions('vlazSecondsSelect', 59, 'sekund');
+
+    generateSelectOptions('vlazHoursSelectDuration', 23, 'ur');
+    generateSelectOptions('vlazMinutesSelectDuration', 59, 'minut');
+    generateSelectOptions('vlazSecondsSelectDuration', 59, 'sekund');
+</script>

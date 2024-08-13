@@ -45,16 +45,18 @@ def create_app():
     from komorasoft.blueprints.core.routes import core
     from komorasoft.blueprints.users.routes import users
     from komorasoft.blueprints.manual.routes import manual
-    from komorasoft.blueprints.auto.routes import auto
-    from komorasoft.blueprints.automatic.routes import automatic
+    # from komorasoft.blueprints.auto.routes import auto
+    # from komorasoft.blueprints.automatic.routes import automatic
+    from komorasoft.blueprints.simple.routes import simple
 
     app.register_blueprint(core, url_prefix='/')
     app.register_blueprint(users, url_prefix='/users')
     app.register_blueprint(sensors, url_prefix='/sensors')
     app.register_blueprint(actuators, url_prefix='/actuators')
     app.register_blueprint(manual, url_prefix='/manual')
-    app.register_blueprint(auto, url_prefix='/auto')
-    app.register_blueprint(automatic, url_prefix='/automatic')
+    # app.register_blueprint(auto, url_prefix='/auto')
+    # app.register_blueprint(automatic, url_prefix='/automatic')
+    app.register_blueprint(simple,url_prefix='/simple')
     
     db.init_app(app)
     migrate = Migrate(app, db)

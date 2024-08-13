@@ -1,0 +1,54 @@
+{% extends('base.html')%}
+{% block title %}Enostavno upravljanje{% endblock %}
+
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('simple.static', filename='css/styles.css') }}">
+<h1>ENOSTAVNO UPRAVLJANJE</h1>
+<div id="simple-container1">
+    <div id="simple-row1" class="row">
+        <div id="simple-col1" class="col col-md-9">
+            <!-- <h4>Nastavi</h4>
+            <br> -->
+
+            {% include 'settings.html' %}
+
+            <!-- TEMPERATURE -->
+            <div class="input-group mb-3 d-flex align-items-center" id="TempField">
+                <span class="input-group-text custom-bg1" id="tempIconBox">Temperatura</span>
+                <span class="input-group-text custom-bg2" id="tempValue">˚C</span>
+                <input type="range" class="form-range" min="0" max="25" step="1" id="temperatureRange" value="4">
+            </div>
+            <!-- OPTIONAL PARAMETERS -->
+            <div class="input-group d-flex flex-column justify-items-center" id="optiParamsField">
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" data-bs-toggle="collapse" href="#collapseExample">
+                    <label class="form-check-label" for="flexSwitchCheckChecked" tooltip="asdf">Napredno</label>
+                </div>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body advancedMenu" id="advancedMenu">
+                        {% include 'ventilator_uparjalnika.html' %}
+                        {% include 'grelec_uparjalnika.html' %}
+                        {% include 'vlazilnik.html' %}
+                    </div>                    
+                </div>
+                {% include 'dusik.html' %}
+                {% include 'LED.html' %}
+                {% include 'UV.html' %}
+                {% include 'zrak.html' %}
+                {% include 'kamera.html' %}
+            </div>
+            
+        </div>
+        <div id="simple-col2" class="col">
+            <h4>Zaženi</h4>
+        </div>
+    </div>
+</div>
+
+
+<!-- JS scripts -->
+
+<script src="{{ url_for('simple.static', filename='js/script.js') }}"></script>
+
+{% endblock %}
