@@ -9,15 +9,34 @@
         <button class="btn btn-success">Shrani trenutne nastavitve</button>
     </div>
 </div><br> -->
+
 <div class="row">
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <h4>Nastavi</h4>
+    <div class="dropdown dropdown-menu-dark col">
+        <button class="btn btn-secondary dropdown-toggle settingsButton" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Nastavitve
         </button>
         <ul class="dropdown-menu dropdown-menu-dark">
-        <li><a class="dropdown-item active" href="#">Uvozi nastavitve</a></li>
+        <li><a class="dropdown-item active" href="#" onclick="displayLoadedSettingName()" data-bs-toggle="modal" data-bs-target="#loadSettingsModal">Uvozi</a></li>
         <li><a class="dropdown-item" href="#">Shrani</a></li>
         <li><a class="dropdown-item" href="#">Shrani kot...</a></li>
         </ul>
     </div>
+    <div class="col" id="loadedSettingField">
+
+    </div>
 </div><br>
+
+
+
+<script>
+    function displayLoadedSettingName() {
+        const selectElement = document.getElementById('loadedSettingField');
+    
+        // Clear existing options (optional)
+        selectElement.innerHTML = '';
+        const loadedSettingTitle = document.createElement('h4');
+        loadedSettingTitle.innerText = 'Test filename loaded';
+        // alert('Test filename loaded');
+        selectElement.appendChild(loadedSettingTitle);
+    }
+</script>

@@ -1,0 +1,55 @@
+<!-- Load Settings Modal -->
+<div class="modal fade" id="loadSettingsModal" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="loadSettingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 60%;">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5" id="loadSettingsModalLabel" style="color: chartreuse;">
+                    Uvozi nastavitve
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div><br><br>
+            
+            <div class="container">
+                <input type="file" id="chosenFile" class="form-control w-75 p-1" aria-label="file example" required>
+                <div class="invalid-feedback">Neveljavno!</div><br><br>
+                <div align="right">
+                    <button type="submit" class="btn btn-primary" onclick="loadSettings()">Uvozi</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>
+                </div><br><br>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // Function to fetch actuators and populate the select element
+    // function populateActuators() {
+    //     fetch('/auto/get_actuators', { method: 'GET' })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             const actuatorSelect = document.getElementById('actuatorSelect');
+    //             actuatorSelect.innerHTML = '<option selected="false"> </option>';  // Clear existing options
+
+    //             data.forEach(actuator => {
+    //                 const option = document.createElement('option');
+    //                 option.value = actuator.name;
+    //                 option.textContent = actuator.name;
+    //                 actuatorSelect.appendChild(option);
+    //             });
+    //         })
+    //         .catch(error => console.error('Error loading actuators:', error));
+    // }
+        function loadSettings() {
+            alert('File loaded!')
+        }
+    // Event listener to populate actuators when the modal is shown
+    const loadSettingsModal = document.getElementById('loadSettingsModal');
+    loadSettingsModal.addEventListener('show.bs.modal');
+    const loadChosenSetting = document.getElementById('chosenFile');
+    loadChosenSetting.addEventListener(loadSettings)
+});
+</script>
+    
