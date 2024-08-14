@@ -105,3 +105,35 @@ def get_settings():
                       'description':setting.description, 
                       'created':setting.created} for setting in settings]
     return jsonify(settings_data)
+
+@simple.route('/get_setting/<string:setting_id>', methods=['GET'])
+def get_setting(setting_id):
+    # Fetch the setting from the database
+    setting = Settings.query.get(setting_id)
+    advanced = setting.advanced
+    temperature = setting.temperature
+    act_settings = setting.actuator_settings
+    # act_setting = ActuatorSetting.query.filter_by(settings_id=setting_id).all()
+    return_data = {} # prepare empty dictionary
+    return_data['settingsTitle'] = setting.name
+    return_data['settingsDescription'] = setting.description
+    return_data['temperature'] = temperature
+    return_data['advanced'] = advanced
+    if act_settings:
+        for act in act_settings:
+            # Convert the setting to a dictionary
+            return_data[act.name] = {
+                "interval_days": act.interval_days,
+                "interval_hours": act.interval_hours,
+                "interval_minutes": act.interval_minutes,
+                "interval_seconds": act.interval_seconds,
+                "duration_hours": act.duration_hours,
+                "duration_minutes": act.duration_minutes,
+                "duration_seconds": act.duration_seconds,
+                # Add other fields as necessary
+            }
+        print(return_data)
+        return jsonify(return_data)
+    else:
+        # If the setting is not found, return an error response
+        return jsonify({"error": "Setting not found"}), 404
