@@ -15,7 +15,8 @@ def create_app():
     # Configure SQLAlchemy with multiple databases
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./blueprints.db'  # Default database URI
     app.config['SQLALCHEMY_BINDS'] = {
-        'schedule_db': 'sqlite:///schedule.db'  # Additional database URI
+        'schedule_db': 'sqlite:///schedule.db',  # Additional database URI
+        'settings_db': 'sqlite:///settings.db'
     }
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

@@ -13,7 +13,7 @@
                 <input type="file" id="chosenFile" class="form-control w-75 p-1" aria-label="file example" required>
                 <div class="invalid-feedback">Neveljavno!</div><br><br>
                 <div align="right">
-                    <button type="submit" class="btn btn-primary" onclick="loadSettings()">Uvozi</button>
+                    <button type="submit" class="btn btn-primary" id="importSettings" >Uvozi</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>
                 </div><br><br>
             </div>
@@ -24,32 +24,55 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-    // Function to fetch actuators and populate the select element
-    // function populateActuators() {
-    //     fetch('/auto/get_actuators', { method: 'GET' })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             const actuatorSelect = document.getElementById('actuatorSelect');
-    //             actuatorSelect.innerHTML = '<option selected="false"> </option>';  // Clear existing options
+    document.getElementById('importSettings').addEventListener('click', function() {
+    // Get the file input
+    var fileInput = document.getElementById('chosenFile');
+    var file = fileInput.files[0];
+    
+    // Make sure a file is selected
+    if (!file) {
+        alert('Please select a file!');
+        return;
+    }
 
-    //             data.forEach(actuator => {
-    //                 const option = document.createElement('option');
-    //                 option.value = actuator.name;
-    //                 option.textContent = actuator.name;
-    //                 actuatorSelect.appendChild(option);
-    //             });
-    //         })
-    //         .catch(error => console.error('Error loading actuators:', error));
-    // }
-        function loadSettings() {
-            alert('File loaded!')
+    // Prepare the FormData object
+    var formData = new FormData();
+    formData.append('file', file);
+
+    // Send the file to the server
+    fetch('import_settings', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => {
+        if (response.ok) {
+            // You can also close the modal or refresh the page here
+            document.querySelector('#loadSettingsModal .btn-close').click();
+            alert('Datoteka uspešno uvožena!');
+        } else {
+            alert('Neuspešen uvoz datoteke.');
         }
-    // Event listener to populate actuators when the modal is shown
-    const loadSettingsModal = document.getElementById('loadSettingsModal');
-    loadSettingsModal.addEventListener('show.bs.modal');
-    const loadChosenSetting = document.getElementById('chosenFile');
-    loadChosenSetting.addEventListener(loadSettings)
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Napaka med uvažanjem datoteke.');
+    });
+
+
+    // Display the filename on a webpage
+    const selectElement = document.getElementById('loadedSettingField');
+    // Clear existing options (optional)
+    selectElement.innerHTML = '';
+    const loadedSettingTitle = document.createElement('h4');
+
+    filetitle = chosenFile.value;
+    // Extract just the file name without the path
+    let fileName = filetitle.split('\\').pop();
+    // Remove the file extension to get only "humidity"
+    let name = fileName.split('.').slice(0, -1).join('.');
+    loadedSettingTitle.innerText= 'Trenutne nastavitve: '+name;
+    // alert('Test filename loaded');
+    selectElement.appendChild(loadedSettingTitle);
 });
 </script>
     

@@ -16,28 +16,28 @@
     <div class="col  timeDuration">
         <div class="row row-time">
                 <!-- <input type="text" class="col form-control-sm timeInput" placeholder="Dni" aria-label="Dni"> -->
-                <select class="col form-select form-select-sm myselection" id="vlazDaysSelect" aria-label="Small select example">
+                <select class="col form-select form-select-sm myselection" id="vlazIntDays" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
-                  <select class="col form-select form-select-sm myselection" id="vlazHoursSelect" aria-label="Small select example">
+                  <select class="col form-select form-select-sm myselection" id="vlazIntHours" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
-                  <select class="col form-select form-select-sm myselection" id="vlazMinutesSelect" aria-label="Small select example">
+                  <select class="col form-select form-select-sm myselection" id="vlazIntMinutes" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
-                  <select class="col form-select form-select-sm myselection" id="vlazSecondsSelect" aria-label="Small select example">
+                  <select class="col form-select form-select-sm myselection" id="vlazIntSeconds" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
         </div>
         <div class="row row-time">
             <div class="col-md-3"></div>
-            <select class="col form-select form-select-sm myselection" id="vlazHoursSelectDuration" aria-label="Small select example">
+            <select class="col form-select form-select-sm myselection" id="vlazDurHours" aria-label="Small select example">
             <!-- JS code here -->
             </select>
-            <select class="col form-select form-select-sm myselection" id="vlazMinutesSelectDuration" aria-label="Small select example">
+            <select class="col form-select form-select-sm myselection" id="vlazDurMinutes" aria-label="Small select example">
             <!-- JS code here -->
             </select>
-            <select class="col form-select form-select-sm myselection" id="vlazSecondsSelectDuration" aria-label="Small select example">
+            <select class="col form-select form-select-sm myselection" id="vlazDurSeconds" aria-label="Small select example">
             <!-- JS code here -->
             </select>
         </div>
@@ -61,12 +61,12 @@
     }
 
     // Call the function to generate options from 0 to 31
-    generateSelectOptions('vlazDaysSelect', 30, 'dni');
-    generateSelectOptions('vlazHoursSelect', 23, 'ur');
-    generateSelectOptions('vlazMinutesSelect', 59, 'minut');
-    generateSelectOptions('vlazSecondsSelect', 59, 'sekund');
+    generateSelectOptions('vlazIntDays', 30, 'dni');
+    generateSelectOptions('vlazIntHours', 23, 'ur');
+    generateSelectOptions('vlazIntMinutes', 59, 'minut');
+    generateSelectOptions('vlazIntSeconds', 59, 'sekund');
 
-    generateSelectOptions('vlazHoursSelectDuration', 23, 'ur');
-    generateSelectOptions('vlazMinutesSelectDuration', 59, 'minut');
-    generateSelectOptions('vlazSecondsSelectDuration', 59, 'sekund');
+    generateSelectOptions('vlazDurHours', 23, 'ur');
+    generateSelectOptions('vlazDurMinutes', 59, 'minut');
+    generateSelectOptions('vlazDurSeconds', 59, 'sekund');
 </script>

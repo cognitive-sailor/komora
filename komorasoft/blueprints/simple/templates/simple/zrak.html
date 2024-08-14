@@ -16,28 +16,28 @@
     <div class="col  timeDuration">
         <div class="row row-time">
                 <!-- <input type="text" class="col form-control-sm timeInput" placeholder="Dni" aria-label="Dni"> -->
-                <select class="col form-select form-select-sm myselection" id="zrakDaysSelect" aria-label="Small select example">
+                <select class="col form-select form-select-sm myselection" id="zrakIntDays" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
-                  <select class="col form-select form-select-sm myselection" id="zrakHoursSelect" aria-label="Small select example">
+                  <select class="col form-select form-select-sm myselection" id="zrakIntHours" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
-                  <select class="col form-select form-select-sm myselection" id="zrakMinutesSelect" aria-label="Small select example">
+                  <select class="col form-select form-select-sm myselection" id="zrakIntMinutes" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
-                  <select class="col form-select form-select-sm myselection" id="zrakSecondsSelect" aria-label="Small select example">
+                  <select class="col form-select form-select-sm myselection" id="zrakIntSeconds" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
         </div>
         <div class="row row-time">
             <div class="col-md-3"></div>
-            <select class="col form-select form-select-sm myselection" id="zrakHoursSelectDuration" aria-label="Small select example">
+            <select class="col form-select form-select-sm myselection" id="zrakDurHours" aria-label="Small select example">
             <!-- JS code here -->
             </select>
-            <select class="col form-select form-select-sm myselection" id="zrakMinutesSelectDuration" aria-label="Small select example">
+            <select class="col form-select form-select-sm myselection" id="zrakDurMinutes" aria-label="Small select example">
             <!-- JS code here -->
             </select>
-            <select class="col form-select form-select-sm myselection" id="zrakSecondsSelectDuration" aria-label="Small select example">
+            <select class="col form-select form-select-sm myselection" id="zrakDurSeconds" aria-label="Small select example">
             <!-- JS code here -->
             </select>
         </div>
@@ -61,12 +61,12 @@
     }
 
     // Call the function to generate options from 0 to 31
-    generateSelectOptions('zrakDaysSelect', 30, 'dni');
-    generateSelectOptions('zrakHoursSelect', 23, 'ur');
-    generateSelectOptions('zrakMinutesSelect', 59, 'minut');
-    generateSelectOptions('zrakSecondsSelect', 59, 'sekund');
+    generateSelectOptions('zrakIntDays', 30, 'dni');
+    generateSelectOptions('zrakIntHours', 23, 'ur');
+    generateSelectOptions('zrakIntMinutes', 59, 'minut');
+    generateSelectOptions('zrakIntSeconds', 59, 'sekund');
 
-    generateSelectOptions('zrakHoursSelectDuration', 23, 'ur');
-    generateSelectOptions('zrakMinutesSelectDuration', 59, 'minut');
-    generateSelectOptions('zrakSecondsSelectDuration', 59, 'sekund');
+    generateSelectOptions('zrakDurHours', 23, 'ur');
+    generateSelectOptions('zrakDurMinutes', 59, 'minut');
+    generateSelectOptions('zrakDurSeconds', 59, 'sekund');
 </script>

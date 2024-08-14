@@ -22,8 +22,8 @@
             <!-- OPTIONAL PARAMETERS -->
             <div class="input-group d-flex flex-column justify-items-center" id="optiParamsField">
                 <div class="form-check form-switch mb-3">
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" data-bs-toggle="collapse" href="#collapseExample">
-                    <label class="form-check-label" for="flexSwitchCheckChecked" tooltip="asdf">Napredno</label>
+                    <input class="form-check-input" type="checkbox" role="switch" id="advancedCheck" data-bs-toggle="collapse" href="#collapseExample">
+                    <label class="form-check-label" for="advancedCheck" tooltip="asdf">Napredno</label>
                 </div>
                 <div class="collapse" id="collapseExample">
                     <div class="card card-body advancedMenu" id="advancedMenu">
@@ -52,5 +52,7 @@
 <!-- JS scripts -->
 
 <script src="{{ url_for('simple.static', filename='js/script.js') }}"></script>
+<script src="{{ url_for('simple.static', filename='js/save_settings.js') }}"></script>
+<script src="{{ url_for('simple.static', filename='js/load_settings.js') }}"></script>
 
 {% endblock %}

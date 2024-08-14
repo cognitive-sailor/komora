@@ -16,28 +16,28 @@
     <div class="col  timeDuration">
         <div class="row row-time">
                 <!-- <input type="text" class="col form-control-sm timeInput" placeholder="Dni" aria-label="Dni"> -->
-                <select class="col form-select form-select-sm myselection" id="kameraDaysSelect" aria-label="Small select example">
+                <select class="col form-select form-select-sm myselection" id="kameraIntDays" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
-                  <select class="col form-select form-select-sm myselection" id="kameraHoursSelect" aria-label="Small select example">
+                  <select class="col form-select form-select-sm myselection" id="kameraIntHours" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
-                  <select class="col form-select form-select-sm myselection" id="kameraMinutesSelect" aria-label="Small select example">
+                  <select class="col form-select form-select-sm myselection" id="kameraIntMinutes" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
-                  <select class="col form-select form-select-sm myselection" id="kameraSecondsSelect" aria-label="Small select example">
+                  <select class="col form-select form-select-sm myselection" id="kameraIntSeconds" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
         </div>
         <div class="row row-time">
             <div class="col-md-3"></div>
-            <select class="col form-select form-select-sm myselection" id="kameraHoursSelectDuration" aria-label="Small select example">
+            <select class="col form-select form-select-sm myselection" id="kameraDurHours" aria-label="Small select example">
             <!-- JS code here -->
             </select>
-            <select class="col form-select form-select-sm myselection" id="kameraMinutesSelectDuration" aria-label="Small select example">
+            <select class="col form-select form-select-sm myselection" id="kameraDurMinutes" aria-label="Small select example">
             <!-- JS code here -->
             </select>
-            <select class="col form-select form-select-sm myselection" id="kameraSecondsSelectDuration" aria-label="Small select example">
+            <select class="col form-select form-select-sm myselection" id="kameraDurSeconds" aria-label="Small select example">
             <!-- JS code here -->
             </select>
         </div>
@@ -61,12 +61,12 @@
     }
 
     // Call the function to generate options from 0 to 31
-    generateSelectOptions('kameraDaysSelect', 30, 'dni');
-    generateSelectOptions('kameraHoursSelect', 23, 'ur');
-    generateSelectOptions('kameraMinutesSelect', 59, 'minut');
-    generateSelectOptions('kameraSecondsSelect', 59, 'sekund');
+    generateSelectOptions('kameraIntDays', 30, 'dni');
+    generateSelectOptions('kameraIntHours', 23, 'ur');
+    generateSelectOptions('kameraIntMinutes', 59, 'minut');
+    generateSelectOptions('kameraIntSeconds', 59, 'sekund');
 
-    generateSelectOptions('kameraHoursSelectDuration', 23, 'ur');
-    generateSelectOptions('kameraMinutesSelectDuration', 59, 'minut');
-    generateSelectOptions('kameraSecondsSelectDuration', 59, 'sekund');
+    generateSelectOptions('kameraDurHours', 23, 'ur');
+    generateSelectOptions('kameraDurMinutes', 59, 'minut');
+    generateSelectOptions('kameraDurSeconds', 59, 'sekund');
 </script>

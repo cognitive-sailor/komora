@@ -16,28 +16,28 @@
     <div class="col  timeDuration">
         <div class="row row-time">
                 <!-- <input type="text" class="col form-control-sm timeInput" placeholder="Dni" aria-label="Dni"> -->
-                <select class="col form-select form-select-sm myselection" id="LEDDaysSelect" aria-label="Small select example">
+                <select class="col form-select form-select-sm myselection" id="LEDIntDays" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
-                  <select class="col form-select form-select-sm myselection" id="LEDHoursSelect" aria-label="Small select example">
+                  <select class="col form-select form-select-sm myselection" id="LEDIntHours" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
-                  <select class="col form-select form-select-sm myselection" id="LEDMinutesSelect" aria-label="Small select example">
+                  <select class="col form-select form-select-sm myselection" id="LEDIntMinutes" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
-                  <select class="col form-select form-select-sm myselection" id="LEDSecondsSelect" aria-label="Small select example">
+                  <select class="col form-select form-select-sm myselection" id="LEDIntSeconds" aria-label="Small select example">
                     <!-- JS code here -->
                   </select>
         </div>
         <div class="row row-time">
             <div class="col-md-3"></div>
-            <select class="col form-select form-select-sm myselection" id="LEDHoursSelectDuration" aria-label="Small select example">
+            <select class="col form-select form-select-sm myselection" id="LEDDurHours" aria-label="Small select example">
             <!-- JS code here -->
             </select>
-            <select class="col form-select form-select-sm myselection" id="LEDMinutesSelectDuration" aria-label="Small select example">
+            <select class="col form-select form-select-sm myselection" id="LEDDurMinutes" aria-label="Small select example">
             <!-- JS code here -->
             </select>
-            <select class="col form-select form-select-sm myselection" id="LEDSecondsSelectDuration" aria-label="Small select example">
+            <select class="col form-select form-select-sm myselection" id="LEDDurSeconds" aria-label="Small select example">
             <!-- JS code here -->
             </select>
         </div>
@@ -61,12 +61,12 @@
     }
 
     // Call the function to generate options from 0 to 31
-    generateSelectOptions('LEDDaysSelect', 30, 'dni');
-    generateSelectOptions('LEDHoursSelect', 23, 'ur');
-    generateSelectOptions('LEDMinutesSelect', 59, 'minut');
-    generateSelectOptions('LEDSecondsSelect', 59, 'sekund');
+    generateSelectOptions('LEDIntDays', 30, 'dni');
+    generateSelectOptions('LEDIntHours', 23, 'ur');
+    generateSelectOptions('LEDIntMinutes', 59, 'minut');
+    generateSelectOptions('LEDIntSeconds', 59, 'sekund');
 
-    generateSelectOptions('LEDHoursSelectDuration', 23, 'ur');
-    generateSelectOptions('LEDMinutesSelectDuration', 59, 'minut');
-    generateSelectOptions('LEDSecondsSelectDuration', 59, 'sekund');
+    generateSelectOptions('LEDDurHours', 23, 'ur');
+    generateSelectOptions('LEDDurMinutes', 59, 'minut');
+    generateSelectOptions('LEDDurSeconds', 59, 'sekund');
 </script>
