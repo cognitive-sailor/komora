@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <form id="removeScheduleForm" action="{{url_for('simple.delete_setting')}}" method="POST">
-                    <input id="deleteSettingId" name="deleteSettingId">
+                    <input id="deleteSettingId" name="deleteSettingId" hidden>
                     <div align="right">
                         <button type="submit" class="btn btn-primary">Potrdi</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>
