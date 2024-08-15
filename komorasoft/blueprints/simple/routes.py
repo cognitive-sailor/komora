@@ -1,6 +1,7 @@
 from flask import request, render_template, redirect, url_for, Blueprint, jsonify
 from flask_login import current_user, login_required
 import json
+from datetime import datetime, timedelta
 
 from komorasoft.app import db
 from komorasoft.blueprints.simple.models import Settings, ActuatorSetting
@@ -17,31 +18,17 @@ def index():
         return render_template('not_authorized.html')
     
 
-@simple.route('/import_settings', methods=['POST'])
-@login_required
-def import_settings():
-    if current_user.role == "Administrator":
-        if 'file' not in request.files:
-            return 'No file part', 400
-        
-        file = request.files['file']
-        
-        if file.filename == '':
-            return 'No selected file', 400
-        
-        if file:
-            # Save the file (you can add your desired path here)
-            file.save(f'komorasoft/data/settings/{file.filename}')
-            return 'File successfully uploaded', 200
-    else:
-        return render_template('not_authorized.html')
-    
-
 @simple.route('/save_settings', methods=['POST'])
 @login_required
 def save_settings():
 
-
+    # Function that check if a set interval is longer than a duration
+    def checkIntervalVSDuration(actuator,intDays,intHours,intMinutes,intSeconds,DurHours,DurMinutes,DurSeconds):
+        interval_length = timedelta(days=intDays,hours=intHours,minutes=intMinutes,seconds=intSeconds)
+        duration_length = timedelta(hours=DurHours,minutes=DurMinutes,seconds=DurSeconds)
+        print(f"Interval: {interval_length}, Duration: {duration_length}")
+        return interval_length > duration_length, actuator
+    
     # Function that inserts user inputs to the database for every actuator setting
     def settings2db(settings_obj, data, advanced, exists):
         if not exists:
@@ -57,19 +44,23 @@ def save_settings():
                     DurMinutes = actuator_settings[actuator+'DurMinutes']
                     DurSeconds = actuator_settings[actuator+'DurSeconds']
 
-                    newActuatorSetting = ActuatorSetting(name=actuator,
-                                                        user_control=usr_control,
-                                                        interval_days=intDays,
-                                                        interval_hours=intHours,
-                                                        interval_minutes=intMinutes,
-                                                        interval_seconds=intSeconds,
-                                                        duration_hours=DurHours,
-                                                        duration_minutes=DurMinutes,
-                                                        duration_seconds=DurSeconds,
-                                                        settings_id=settings_obj.id)
-                
-                    db.session.add(newActuatorSetting)
-                    db.session.commit()
+                    interval_shorter_than_dur, incorrect_actuator = checkIntervalVSDuration(actuator,intDays,intHours,intMinutes,intSeconds,DurHours,DurMinutes,DurSeconds)
+                    if interval_shorter_than_dur:
+                        newActuatorSetting = ActuatorSetting(name=actuator,
+                                                            user_control=usr_control,
+                                                            interval_days=intDays,
+                                                            interval_hours=intHours,
+                                                            interval_minutes=intMinutes,
+                                                            interval_seconds=intSeconds,
+                                                            duration_hours=DurHours,
+                                                            duration_minutes=DurMinutes,
+                                                            duration_seconds=DurSeconds,
+                                                            settings_id=settings_obj.id)
+                    
+                        db.session.add(newActuatorSetting)
+                        db.session.commit()
+                    else:
+                        return jsonify({'message': f'The interval is shorter than the duration at actuator setting: {incorrect_actuator}'})
         else:
             # Find and update the existing setting for every actuator
             for actuator, actuator_settings in data.items(): # for each actuator, read data for interval and duration
@@ -89,19 +80,21 @@ def save_settings():
                     DurMinutes = actuator_settings[actuator+'DurMinutes']
                     DurSeconds = actuator_settings[actuator+'DurSeconds']
 
-                    print(f"intDays: {intDays}")
-
-                    editActuatorSetting.user_control = usr_control
-                    editActuatorSetting.interval_days = intDays
-                    editActuatorSetting.interval_hours = intHours
-                    editActuatorSetting.interval_minutes = intMinutes
-                    editActuatorSetting.interval_seconds = intSeconds
-                    editActuatorSetting.duration_hours = DurHours
-                    editActuatorSetting.duration_minutes = DurMinutes
-                    editActuatorSetting.duration_seconds = DurSeconds
-                    editActuatorSetting.settings_id = settings_obj.id
-                
-                    db.session.commit()
+                    interval_shorter_than_dur, incorrect_actuator = checkIntervalVSDuration(actuator,intDays,intHours,intMinutes,intSeconds,DurHours,DurMinutes,DurSeconds)
+                    if interval_shorter_than_dur:
+                        editActuatorSetting.user_control = usr_control
+                        editActuatorSetting.interval_days = intDays
+                        editActuatorSetting.interval_hours = intHours
+                        editActuatorSetting.interval_minutes = intMinutes
+                        editActuatorSetting.interval_seconds = intSeconds
+                        editActuatorSetting.duration_hours = DurHours
+                        editActuatorSetting.duration_minutes = DurMinutes
+                        editActuatorSetting.duration_seconds = DurSeconds
+                        editActuatorSetting.settings_id = settings_obj.id
+                    
+                        db.session.commit()
+                    else:
+                        return jsonify({'message': f'The interval is shorter than the duration at actuator setting: {incorrect_actuator}'})
 
     if current_user.role == "Administrator":
         data = request.json # get data from JS
@@ -190,3 +183,15 @@ def delete_setting():
             return jsonify({'message': f'No settings found with ID {setting_id}'}), 404
     else:
         return render_template('not_authorized.html')
+    
+
+@simple.route('/check_active_settings', methods=['GET'])
+def check_active_settings():
+    # Query the database for any active Settings
+    active_settings = Settings.query.filter_by(active=True).first()
+    
+    # Return True if any active Settings exist, otherwise False
+    if active_settings:
+        return jsonify({'active': True, 'settingName':active_settings.name})
+    else:
+        return jsonify({'active': False})

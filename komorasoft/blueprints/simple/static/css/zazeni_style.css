@@ -1,0 +1,66 @@
+/* Container for the entire section */
+#simple-col2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Align items at the top */
+    height: 100%;
+    padding: 10px;
+    position: relative;
+}
+
+/* Styling for the header section */
+.header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.1); /* Slight darkening (10% black) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5em; /* About twice the height of the h4 text */
+    border-radius: 5px 5px 0 0; /* Rounded corners only on top left and right */
+    padding: 10px;
+}
+
+/* Centering the h4 inside the header */
+.header h4 {
+    margin: 0;
+    color: #333; /* Text color */
+}
+
+/* Styling for the setting-container */
+.setting-container {
+    margin-top: 3.5em; /* Create space for the header */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 10px; /* Gap between elements */
+}
+
+/* Styling for the h3 element */
+.setting-name {
+    width: calc(100% - 8px); /* Full width with a 4px gap on each side */
+    text-align: center;
+    margin: 0; /* Remove default margins */
+    padding: 4px;
+}
+
+/* Styling for the buttons */
+.icon-button {
+    background: none;
+    border: none;
+    width: 30%; /* Each button takes approximately half the width of the container */
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+}
+
+.icon-button img {
+    width: 50px; /* Ensure the icon fills the button */
+    height: 50px;
+}

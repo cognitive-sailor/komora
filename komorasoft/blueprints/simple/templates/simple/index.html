@@ -4,6 +4,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('simple.static', filename='css/styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('simple.static', filename='css/zazeni_style.css') }}">
 <h1>ENOSTAVNO UPRAVLJANJE</h1>
 <div id="simple-container1">
     <div id="simple-row1" class="row">
@@ -32,6 +33,7 @@
                         {% include 'vlazilnik.html' %}
                     </div>                    
                 </div>
+                <!-- USER DEFINED PARAMETERS -->
                 {% include 'dusik.html' %}
                 {% include 'LED.html' %}
                 {% include 'UV.html' %}
@@ -41,8 +43,19 @@
             
         </div>
         <div id="simple-col2" class="col">
-            <h4>Zaženi</h4>
+            <div class="header">
+                <h4>Zaženi</h4>
+            </div><br><br><br>
+            <h3 id="submittedSetting">Setting Name</h3>
+            <input type="text" id="submittedSettingID" hidden>
+            <button id="playStopButton" class="icon-button">
+                <img src="{{url_for('simple.static', filename='images/play-button.png')}}" alt="Play Icon" id="playStopIcon">
+            </button>
         </div>
+        
+        
+        
+        
     </div>
 </div>
 
@@ -54,5 +67,6 @@
 <script src="{{ url_for('simple.static', filename='js/script.js') }}"></script>
 <script src="{{ url_for('simple.static', filename='js/save_settings.js') }}"></script>
 <script src="{{ url_for('simple.static', filename='js/load_settings.js') }}"></script>
+<script src="{{ url_for('simple.static', filename='js/submit_settings.js') }}"></script>
 
 {% endblock %}
