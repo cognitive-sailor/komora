@@ -25,7 +25,7 @@ class Settings(db.Model):
     __bind_key__ = 'settings_db'
     __tablename__ = 'settings'
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, unique=True, nullable=False)
     description = db.Column(db.String, nullable=True)
     created = db.Column(db.DateTime, default=datetime.now())
     active = db.Column(db.Boolean, default=False, nullable=False)

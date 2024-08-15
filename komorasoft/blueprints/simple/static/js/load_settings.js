@@ -62,14 +62,24 @@ function onSelectedSettings(settingId) {
         .then(response => response.json())
         .then(data => {
             // Set what you can manually:
+            const settingsID = document.getElementById('settingsID');
             const settingsTitle = document.getElementById('settingsTitle');
             const settingsDescription = document.getElementById('settingsDescription');
+            const settingsDescriptionTooltip = document.getElementById('settingsDescriptionTooltip');
             const temperatureRange = document.getElementById('temperatureRange');
             const advancedCheck = document.getElementById('advancedCheck');
+            const deleteTitle = document.getElementById('deleteTitle') // to display in settingsDeleteModal
+            const deleteSettingId = document.getElementById('deleteSettingId') // to set the id of the setting for deletion
+
+            settingsID.value = data['id']
             settingsTitle.value = data['settingsTitle'];
-            settingsDescription.value = data['settingsDescription'];
+            settingsDescription.value = data['settingsDescription']
+            settingsDescriptionTooltip.textContent = data['settingsDescription'];
             temperatureRange.value = data['temperature'];
             updateTempValue() // Update value in Temperatura: X°C
+            deleteTitle.innerText = data['settingsTitle']
+            deleteSettingId.value = settingId
+            
             // Check if 'advanced' is true, and if so, simulate a click on the advancedCheck switch
             if (data['advanced'] === true && !advancedCheck.checked) {
                 advancedCheck.click();
@@ -99,10 +109,10 @@ function onSelectedSettings(settingId) {
             // Iterate over the JSON data and populate the HTML elements
             Object.keys(data).forEach(category => {
                 // Skip categories that are equal to "settingsTitle" or "settingsDescription"
-                if (category === 'settingsTitle' || category === 'settingsDescription') {
+                if (category === 'settingsTitle' || category === 'settingsDescription' || category === 'id') {
                     return;
                 }
-
+                console.log(category)
                 const settings = data[category];
 
                 // Iterate over each setting within the category
@@ -144,3 +154,4 @@ function setElementValuesToZero() {
         }
     });
 }
+ 

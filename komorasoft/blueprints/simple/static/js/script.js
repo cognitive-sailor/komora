@@ -12,3 +12,7 @@ function updateTempValue() {
 
 // Add an event listener to the range input
 rangeInput.addEventListener('input', updateTempValue);
+
+// Enable popovers
+const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))

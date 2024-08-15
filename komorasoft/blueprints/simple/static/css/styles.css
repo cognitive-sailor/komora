@@ -24,13 +24,18 @@ h6 {
     background-color: rgb(144, 167, 142);
     height: 100%;
     padding: 2%;
-    overflow: auto;
+    overflow: hidden;
+    overflow-y: auto;
 }
 
 #simple-col2 {
     background-color: rgb(208, 158, 117);
     height: 100%;
     padding: 2%;
+}
+
+.main-row {
+    overflow: hidden;
 }
 
 #TempField {
@@ -146,3 +151,47 @@ h6 {
     max-height: 50px;
     overflow: auto;
 }
+
+
+
+/* TOOLTIP */
+
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  .tooltip-text {
+    visibility: hidden;
+    width: 240px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 125%; /* Position the tooltip below the element */
+    left: 50%;
+    margin-left: -75px; /* Center the tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .tooltip-text::after {
+    content: "";
+    position: absolute;
+    bottom: 100%; /* Position the arrow on the top */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #555 transparent; /* Arrow pointing down */
+  }
+  
+  .tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+  

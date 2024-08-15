@@ -43,10 +43,12 @@ def save_settings():
 
 
     # Function that inserts user inputs to the database for every actuator setting
-    def settings2db(settings_obj, data, advanced):
-        for actuator, actuator_settings in data.items(): # for each actuator, read data for interval and duration
+    def settings2db(settings_obj, data, advanced, exists):
+        if not exists:
+            # Create new settings for every acutator
+            for actuator, actuator_settings in data.items(): # for each actuator, read data for interval and duration
                 usr_control = True if advanced else False
-                if actuator not in ["advancedCheck","settingsDescription","settingsTitle","temperatureRange"]:
+                if actuator not in ["settingsID","advancedCheck","settingsDescription","settingsTitle","temperatureRange"]:
                     intDays = actuator_settings[actuator+'IntDays']
                     intHours = actuator_settings[actuator+'IntHours']
                     intMinutes = actuator_settings[actuator+'IntMinutes']
@@ -64,25 +66,61 @@ def save_settings():
                                                         duration_hours=DurHours,
                                                         duration_minutes=DurMinutes,
                                                         duration_seconds=DurSeconds,
-                                                        settings_id=newSettings.id)
+                                                        settings_id=settings_obj.id)
+                
                     db.session.add(newActuatorSetting)
+                    db.session.commit()
+        else:
+            # Find and update the existing setting for every actuator
+            for actuator, actuator_settings in data.items(): # for each actuator, read data for interval and duration
+                usr_control = True if advanced else False
+                if actuator not in ["settingsID","advancedCheck","settingsDescription","settingsTitle","temperatureRange"]:
+                    print(f"Nastavitev: {actuator}")
+                    editActuatorSetting = ActuatorSetting.query.filter_by(name=actuator, settings_id=settings_obj.id).first()
+                    print(f"Stevilo act nastavitev {len(ActuatorSetting.query.filter_by(name=actuator, settings_id=settings_obj.id).all())}")
+                    print(editActuatorSetting)
+                    print(editActuatorSetting.id)
+
+                    intDays = actuator_settings[actuator+'IntDays']
+                    intHours = actuator_settings[actuator+'IntHours']
+                    intMinutes = actuator_settings[actuator+'IntMinutes']
+                    intSeconds = actuator_settings[actuator+'IntSeconds']
+                    DurHours = actuator_settings[actuator+'DurHours']
+                    DurMinutes = actuator_settings[actuator+'DurMinutes']
+                    DurSeconds = actuator_settings[actuator+'DurSeconds']
+
+                    print(f"intDays: {intDays}")
+
+                    editActuatorSetting.user_control = usr_control
+                    editActuatorSetting.interval_days = intDays
+                    editActuatorSetting.interval_hours = intHours
+                    editActuatorSetting.interval_minutes = intMinutes
+                    editActuatorSetting.interval_seconds = intSeconds
+                    editActuatorSetting.duration_hours = DurHours
+                    editActuatorSetting.duration_minutes = DurMinutes
+                    editActuatorSetting.duration_seconds = DurSeconds
+                    editActuatorSetting.settings_id = settings_obj.id
+                
                     db.session.commit()
 
     if current_user.role == "Administrator":
         data = request.json # get data from JS
+        settingsID = data['settingsID']['settingsID'] # setting's ID
         name = data['settingsTitle']['settingsTitle'] # user defined or selected settings Title
-        description = data['settingsDescription']['settingsDescription'] # user defined or selected settings description
+        description = data['settingsDescription']['settingsDescription'] if data['settingsDescription']['settingsDescription'] != "" else "Brez opisa." # user defined or selected settings description
         temperature = data['temperatureRange']['temperatureRange'] # user defined temperature [Int]
         advanced = data['advancedCheck']['advancedCheck'] # check if user defined advanced settings [True/False]
-
-        existingSettings = Settings.query.filter_by(name=name).first()
+        
+        existingSettings = Settings.query.filter_by(id=settingsID).first()
 
         if existingSettings: # assign the new values = overwrite the Settings
             # Edit the Settings
+            existingSettings.description = description # update description
             existingSettings.temperature = temperature # update temperature
-            existingSettings.advanced = advanced
+            existingSettings.advanced = advanced # update advanced
+            db.session.commit()
             # set the rest of the parameters
-            settings2db(existingSettings, data, advanced)
+            settings2db(existingSettings, data, advanced, True)
             return jsonify(data)
         else:
             # Create new Settings
@@ -90,8 +128,8 @@ def save_settings():
             db.session.add(newSettings)
             db.session.commit()
             # set the rest of the parameters
-            settings2db(newSettings, data, advanced)
-            return jsonify(data)
+            settings2db(newSettings, data, advanced, False)
+            return jsonify(data), 201
     else:
         return render_template('not_authorized.html')
     
@@ -115,6 +153,7 @@ def get_setting(setting_id):
     act_settings = setting.actuator_settings
     # act_setting = ActuatorSetting.query.filter_by(settings_id=setting_id).all()
     return_data = {} # prepare empty dictionary
+    return_data['id'] = setting.id
     return_data['settingsTitle'] = setting.name
     return_data['settingsDescription'] = setting.description
     return_data['temperature'] = temperature
@@ -132,8 +171,22 @@ def get_setting(setting_id):
                 "duration_seconds": act.duration_seconds,
                 # Add other fields as necessary
             }
-        print(return_data)
         return jsonify(return_data)
     else:
         # If the setting is not found, return an error response
         return jsonify({"error": "Setting not found"}), 404
+    
+@simple.route('/delete_setting', methods=['POST'])
+@login_required
+def delete_setting():
+    if current_user.role == "Administrator":
+        setting_id = request.form.get('deleteSettingId')
+        settings2delete = Settings.query.get(setting_id)
+        if settings2delete:
+            db.session.delete(settings2delete)
+            db.session.commit()
+            return render_template('index.html')
+        else:
+            return jsonify({'message': f'No settings found with ID {setting_id}'}), 404
+    else:
+        return render_template('not_authorized.html')

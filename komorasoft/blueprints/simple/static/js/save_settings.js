@@ -57,5 +57,6 @@ document.getElementById('saveSettingsButton').addEventListener('click', function
         formData[category][id] = value;
     }
 
-    
+    location.reload();
+    alert("Nastavitve uspešno shranjene!");
 });
