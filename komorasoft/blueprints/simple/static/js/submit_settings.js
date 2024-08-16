@@ -5,7 +5,7 @@ document.getElementById('submitSettingsButton').addEventListener('click', functi
         .then(data => {
             if (data.active) {
                 console.log("There are active settings.");
-                alert("Nastavitev ${data.settingName} je aktivna! Potrebno je zaustaviti izvajanje te aktivnosti, če želite naložiti novo.")
+                alert(`Nastavitev ${data.settingName} je aktivna! Potrebno je zaustaviti izvajanje te aktivnosti, če želite naložiti novo.`);
             } else {
                 console.log("No active settings found.");
                 // No setting is active, submit the selected setting to the Execute panel

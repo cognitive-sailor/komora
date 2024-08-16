@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 
 from komorasoft.app import db
 from komorasoft.blueprints.simple.models import Settings, ActuatorSetting
+from komorasoft.scripts.frontend.updateui import update_active_setting, check_active, stop_all
 
 simple = Blueprint('simple', __name__, static_folder="static", template_folder='templates/simple')
 
@@ -211,11 +212,15 @@ def check_active_settings():
 @simple.route('/start', methods=['POST'])
 @login_required
 def start():
-    settingID = request.form.get('confirmStart_SettingID')
-    return jsonify(settingID)
+    settingID = request.form.get('confirmStart_SettingID') # get ID of the setting the user is starting..
+    update_active_setting(settingID)
+    currently_active_setting = check_active()
+    print(currently_active_setting)
+    return jsonify({"Currently active setting:" : currently_active_setting})
 
 @simple.route('/stop', methods=['POST'])
 @login_required
 def stop():
+    stop_all() # set all settings's active attribute to False
     message = "Zaustavili ste izvajanje programa!"
     return jsonify(message)
