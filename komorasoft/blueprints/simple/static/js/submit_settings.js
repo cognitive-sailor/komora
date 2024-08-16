@@ -15,9 +15,11 @@ document.getElementById('submitSettingsButton').addEventListener('click', functi
                 }
                 else {
                     const settingsTitle = document.getElementById('settingsTitle');
+                    const settingsID = document.getElementById('settingsID');
                     const submittedSetting = document.getElementById('submittedSetting');
                     const submittedSettingID = document.getElementById('submittedSettingID');
-                    submittedSetting.textContent = settingsTitle.value;
+                    submittedSetting.textContent = settingsTitle.value; // forward the Title of the settings to the execution panel
+                    submittedSettingID.value = settingsID.value; // forward the ID of the settings to the execution panel
                 }
             }
         })
@@ -25,17 +27,12 @@ document.getElementById('submitSettingsButton').addEventListener('click', functi
 });
 
 
+function settingSTART() {
+    const submittedSetting = document.getElementById('submittedSetting');
+    const submittedSettingID = document.getElementById('submittedSettingID');
+    const confirmStart_SettingID = document.getElementById('confirmStart_SettingID');
+    const confirmStartMessage = document.getElementById('confirmStartMessage');
 
-
-
-document.getElementById('playStopButton').addEventListener('click', function() {
-    const playStopIcon = document.getElementById('playStopIcon');
-
-    if (playStopIcon.getAttribute('src') === "static/images/play-button.png") {
-        playStopIcon.setAttribute('src', "static/images/stop-button-rounded.png");
-        playStopIcon.setAttribute('alt', 'Stop Icon');
-    } else {
-        playStopIcon.setAttribute('src', "static/images/play-button.png");
-        playStopIcon.setAttribute('alt', 'Play Icon');
-    }
-});
+    confirmStart_SettingID.value = submittedSettingID.value; // send the settings' ID to the modal for confirmation
+    confirmStartMessage.innerHTML = "Ste prepričani, da želite zagnati program po izbranih nastavitvah: "+submittedSetting.innerText+"?";
+}

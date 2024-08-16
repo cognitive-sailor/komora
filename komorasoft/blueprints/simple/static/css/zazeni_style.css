@@ -26,8 +26,9 @@
 
 /* Centering the h4 inside the header */
 .header h4 {
+    font-weight: bold;
     margin: 0;
-    color: #333; /* Text color */
+    color: #000000; /* Text color */
 }
 
 /* Styling for the setting-container */
@@ -42,7 +43,9 @@
 }
 
 /* Styling for the h3 element */
-.setting-name {
+#submittedSetting {
+    color: black;
+    font-size: x-large;
     width: calc(100% - 8px); /* Full width with a 4px gap on each side */
     text-align: center;
     margin: 0; /* Remove default margins */
@@ -53,7 +56,7 @@
 .icon-button {
     background: none;
     border: none;
-    width: 30%; /* Each button takes approximately half the width of the container */
+    width: 30%;
     padding: 0;
     cursor: pointer;
     display: flex;
@@ -61,6 +64,9 @@
 }
 
 .icon-button img {
-    width: 50px; /* Ensure the icon fills the button */
-    height: 50px;
+    width: 30px;
+    height: 30px;
 }
+
+
+

@@ -1,0 +1,21 @@
+<!-- confirm Stop Modal -->
+<div class="modal fade" id="confirmStopModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="confirmStopModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5" id="confirmStopModalLabel" style="color: chartreuse;">Zagon programa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"><br>
+                <p id="confirmStopMessage">Ste prepričani, da želite zaustaviti izvajanje programa po izbranih nastavitvah?</p>
+                <form id="confirmStopForm" action="{{url_for('simple.stop')}}" method="POST">
+                    <input id="confirmStop_SettingID" name="confirmStop_SettingID" hidden>
+                    <div align="right">
+                        <button type="submit" class="btn btn-primary">Potrdi</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

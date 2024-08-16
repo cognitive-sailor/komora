@@ -195,3 +195,17 @@ def check_active_settings():
         return jsonify({'active': True, 'settingName':active_settings.name})
     else:
         return jsonify({'active': False})
+    
+
+
+@simple.route('/start', methods=['POST'])
+@login_required
+def start():
+    settingID = request.form.get('confirmStart_SettingID')
+    return jsonify(settingID)
+
+@simple.route('/stop', methods=['POST'])
+@login_required
+def stop():
+    message = "Zaustavili ste izvajanje programa!"
+    return jsonify(message)
