@@ -30,7 +30,14 @@
           <li class="nav-item">
             <a class="nav-link" href="#">Meritve</a>
           </li>
+          
         </ul>
+        <div class="container-fluid d-flex justify-content-center align-items-center">
+          <p style="width: fit-content; margin: 0%; padding: 0%;">Beleženje SENZORJEV</p>
+          <img id="sensorsIndicator" src="{{url_for('static',filename='images/sensors-green.png')}}" alt="senzorji" style="height: 25px; margin-left: 20px;">
+          <p style="width: fit-content; margin: 0%; padding: 0%; margin-left: 60px;">Izvajanje programa</p>
+          <img id="programIndicator" src="{{url_for('static',filename='images/check.png')}}" alt="program aktiven?" style="height: 25px; margin-left: 20px;">
+        </div>
         {% if not current_user.is_authenticated %}
           <form action="{{url_for('users.login')}}" class="d-flex" role="search" method="POST">
             <input type="hidden" name="next" value="{{ request.url }}">

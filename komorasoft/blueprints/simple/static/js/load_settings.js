@@ -139,7 +139,7 @@ function onSelectedSettings(settingId) {
 window.onload = loadSettings;
 
 // Add event listener to a refresh button if needed
-document.getElementById('saveSettingsButton').addEventListener('click', loadSettings);
+// document.getElementById('saveSettingsButton').addEventListener('click', loadSettings);
 
 
 

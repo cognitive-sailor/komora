@@ -23,11 +23,11 @@ def index():
 def save_settings():
 
     # Function that check if a set interval is longer than a duration
-    def checkIntervalVSDuration(actuator,intDays,intHours,intMinutes,intSeconds,DurHours,DurMinutes,DurSeconds):
-        interval_length = timedelta(days=intDays,hours=intHours,minutes=intMinutes,seconds=intSeconds)
-        duration_length = timedelta(hours=DurHours,minutes=DurMinutes,seconds=DurSeconds)
-        print(f"Interval: {interval_length}, Duration: {duration_length}")
-        return interval_length > duration_length, actuator
+    def checkIntervalVSDuration(intDays,intHours,intMinutes,intSeconds,DurHours,DurMinutes,DurSeconds):
+        interval_length = timedelta(days=int(intDays),hours=int(intHours),minutes=int(intMinutes),seconds=int(intSeconds))
+        duration_length = timedelta(hours=int(DurHours),minutes=int(DurMinutes),seconds=int(DurSeconds))
+        print(f"Interval: {interval_length}, Duration: {duration_length}, Comparrison: {interval_length >= duration_length}")
+        return interval_length, duration_length
     
     # Function that inserts user inputs to the database for every actuator setting
     def settings2db(settings_obj, data, advanced, exists):
@@ -44,8 +44,8 @@ def save_settings():
                     DurMinutes = actuator_settings[actuator+'DurMinutes']
                     DurSeconds = actuator_settings[actuator+'DurSeconds']
 
-                    interval_shorter_than_dur, incorrect_actuator = checkIntervalVSDuration(actuator,intDays,intHours,intMinutes,intSeconds,DurHours,DurMinutes,DurSeconds)
-                    if interval_shorter_than_dur:
+                    interval_length, duration_length = checkIntervalVSDuration(intDays,intHours,intMinutes,intSeconds,DurHours,DurMinutes,DurSeconds)
+                    if (interval_length > duration_length) or (interval_length == duration_length == timedelta(seconds=0)):
                         newActuatorSetting = ActuatorSetting(name=actuator,
                                                             user_control=usr_control,
                                                             interval_days=intDays,
@@ -56,11 +56,14 @@ def save_settings():
                                                             duration_minutes=DurMinutes,
                                                             duration_seconds=DurSeconds,
                                                             settings_id=settings_obj.id)
-                    
+                        print("test 2.1")
                         db.session.add(newActuatorSetting)
                         db.session.commit()
+                        print("test 2.2")
+                        print(f"Created. Added the acutator's settings: {actuator, usr_control,intDays,intHours,intMinutes,intSeconds,settings_obj.id}")
                     else:
-                        return jsonify({'message': f'The interval is shorter than the duration at actuator setting: {incorrect_actuator}'})
+                        print(f'The interval is shorter than the duration at actuator setting: {actuator}')
+                        return jsonify({'message': f'The interval is shorter than the duration at {actuator} setting'})
         else:
             # Find and update the existing setting for every actuator
             for actuator, actuator_settings in data.items(): # for each actuator, read data for interval and duration
@@ -80,8 +83,8 @@ def save_settings():
                     DurMinutes = actuator_settings[actuator+'DurMinutes']
                     DurSeconds = actuator_settings[actuator+'DurSeconds']
 
-                    interval_shorter_than_dur, incorrect_actuator = checkIntervalVSDuration(actuator,intDays,intHours,intMinutes,intSeconds,DurHours,DurMinutes,DurSeconds)
-                    if interval_shorter_than_dur:
+                    interval_length, duration_length = checkIntervalVSDuration(intDays,intHours,intMinutes,intSeconds,DurHours,DurMinutes,DurSeconds)
+                    if (interval_length > duration_length) or (interval_length == duration_length == timedelta(seconds=0)):
                         editActuatorSetting.user_control = usr_control
                         editActuatorSetting.interval_days = intDays
                         editActuatorSetting.interval_hours = intHours
@@ -93,8 +96,9 @@ def save_settings():
                         editActuatorSetting.settings_id = settings_obj.id
                     
                         db.session.commit()
+                        print(f"Edited. Changed the acutator's settings: {actuator, usr_control,intDays,intHours,intMinutes,intSeconds,settings_obj.id}")
                     else:
-                        return jsonify({'message': f'The interval is shorter than the duration at actuator setting: {incorrect_actuator}'})
+                        return jsonify({'message': f'The interval is shorter than the duration at actuator setting: {actuator}'})
 
     if current_user.role == "Administrator":
         data = request.json # get data from JS
@@ -104,9 +108,10 @@ def save_settings():
         temperature = data['temperatureRange']['temperatureRange'] # user defined temperature [Int]
         advanced = data['advancedCheck']['advancedCheck'] # check if user defined advanced settings [True/False]
         
-        existingSettings = Settings.query.filter_by(id=settingsID).first()
-
+        existingSettings = Settings.query.filter_by(id=settingsID, name=name).first()
+        print(f"Submitted data: {data}")
         if existingSettings: # assign the new values = overwrite the Settings
+            print(f"Editing. Name: {name}v")
             # Edit the Settings
             existingSettings.description = description # update description
             existingSettings.temperature = temperature # update temperature
@@ -114,15 +119,20 @@ def save_settings():
             db.session.commit()
             # set the rest of the parameters
             settings2db(existingSettings, data, advanced, True)
-            return jsonify(data)
+            return jsonify("Edited settings",data), 201
         else:
+            print(f"Creating. Name: {name}, ID: {settingsID}")
             # Create new Settings
+            print("test 0")
             newSettings = Settings(name=name,description=description,advanced=advanced,temperature=temperature)
+            print("test 1")
             db.session.add(newSettings)
             db.session.commit()
+            print("test 2")
             # set the rest of the parameters
             settings2db(newSettings, data, advanced, False)
-            return jsonify(data), 201
+            print("test 3")
+            return jsonify("Created new settings",data), 201
     else:
         return render_template('not_authorized.html')
     

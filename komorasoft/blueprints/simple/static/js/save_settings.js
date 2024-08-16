@@ -83,8 +83,10 @@ document.getElementById('saveSettingsButton').addEventListener('click', function
         .then(data => {
             console.log(data);
             alert("Nastavitve uspešno shranjene!");
-            location.reload();  // Reload the page
         })
+        .then(() => {
+            location.reload();  // Reload the page
+            })
         .catch(error => console.error('Error:', error));
     }
 
@@ -107,3 +109,12 @@ document.getElementById('saveSettingsButton').addEventListener('click', function
         formData[category][id] = value;
     }
 });
+
+function deleteSettings() {
+    const settingsTitle = document.getElementById('settingsTitle');
+    const deleteSettingsModal = document.getElementById('deleteSettingsModal');
+    if (settingsTitle.value.trim() === '') {
+        alert("Ni izbrane nastavitve za izbris!");
+        window.location.reload();
+        return;}
+};

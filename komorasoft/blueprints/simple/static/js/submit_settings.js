@@ -33,6 +33,14 @@ function settingSTART() {
     const confirmStart_SettingID = document.getElementById('confirmStart_SettingID');
     const confirmStartMessage = document.getElementById('confirmStartMessage');
 
-    confirmStart_SettingID.value = submittedSettingID.value; // send the settings' ID to the modal for confirmation
-    confirmStartMessage.innerHTML = "Ste prepričani, da želite zagnati program po izbranih nastavitvah: "+submittedSetting.innerText+"?";
+    if (submittedSettingID.value === ""){
+        // Check if user submitted the settings (did they click on the Naloži or submitSettingsButton button)
+        alert("Najprej moraš izbrati in NALOŽITI nastavitev. To lahko narediš tako, da izbereš nastavitev z menija NASTAVITVE, nato pa klikneš na rumen gumb 'Naloži'.");
+        window.location.reload();
+        return;
+    }
+    else {
+        confirmStart_SettingID.value = submittedSettingID.value; // send the settings' ID to the modal for confirmation
+        confirmStartMessage.innerHTML = "Ste prepričani, da želite zagnati program po izbranih nastavitvah: "+submittedSetting.innerText+"?";
+    }
 }
