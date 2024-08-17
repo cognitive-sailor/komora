@@ -98,4 +98,4 @@ monitor_thread = threading.Thread(target=job_monitor, args=('Belezenje_senzorjev
 
 # Start Flask-SocketIO server
 if __name__ == '__main__':
-    socketio.run(flask_app, host='0.0.0.0', debug=True)
+    socketio.run(flask_app, host='0.0.0.0', debug=False)

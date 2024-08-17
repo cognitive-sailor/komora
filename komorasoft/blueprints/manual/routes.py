@@ -3,6 +3,7 @@ from flask_login import current_user, login_required
 
 from komorasoft.app import db
 from komorasoft.blueprints.actuators.models import Actuator
+from komorasoft.blueprints.simple.models import Settings
 
 manual = Blueprint('manual', __name__, static_folder='static', static_url_path='/static', template_folder='templates')
 
@@ -10,11 +11,19 @@ manual = Blueprint('manual', __name__, static_folder='static', static_url_path='
 @manual.route('/')
 @login_required
 def index():
-    if current_user.role == "Administrator":
-        actuators = Actuator.query.all()  # Fetch all actuators from the database
-        return render_template('manual/index.html', actuators=actuators)
+    active_setting = Settings.query.filter_by(active=True).first() # find active setting
+    print(active_setting)
+    if active_setting:
+        print("test 1")
+        return render_template('manual/setting_active.html')
     else:
-        return render_template('manual/not_authorized.html')
+        if current_user.role == "Administrator":
+            print("test 2")
+            actuators = Actuator.query.all()  # Fetch all actuators from the database
+            return render_template('manual/index.html', actuators=actuators)
+        else:
+            return render_template('manual/not_authorized.html')
+        
 
 @manual.route('/toggle_device', methods=['POST'])
 def toggle_device():

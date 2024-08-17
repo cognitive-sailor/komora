@@ -209,19 +209,20 @@ def check_active_settings():
     
 
 
-@simple.route('/start', methods=['POST'])
+@simple.route('/start', methods=['GET','POST'])
 @login_required
 def start():
     if current_user.role == "Administrator":
         settingID = request.form.get('confirmStart_SettingID') # get ID of the setting the user is starting..
+        print(f"start: {settingID}")
         update_active_setting(settingID)
         currently_active_setting = check_active()
-        print(currently_active_setting)
-        return render_template('index.html')
+        print(settingID, currently_active_setting)
+        return redirect(url_for('simple.index'))
     else:
         return render_template('not_authorized.html')
 
-@simple.route('/stop', methods=['POST'])
+@simple.route('/stop', methods=['GET','POST'])
 @login_required
 def stop():
     if current_user.role == "Administrator":
