@@ -33,10 +33,10 @@
           
         </ul>
         <div class="container-fluid d-flex justify-content-center align-items-center">
-          <p style="width: fit-content; margin: 0%; padding: 0%;">Beleženje SENZORJEV</p>
+          <p id="sensorsIndicatorText" style="width: fit-content; margin: 0%; padding: 0%;">Beleženje SENZORJEV</p>
           <img id="sensorsIndicator" src="{{url_for('static',filename='images/sensors-black.png')}}" alt="senzorji" style="height: 25px; margin-left: 20px;">
-          <p style="width: fit-content; margin: 0%; padding: 0%; margin-left: 60px;">Izvajanje programa</p>
-          <img id="programIndicator" src="{{url_for('static',filename='images/x.png')}}" alt="program aktiven?" style="height: 25px; margin-left: 20px;">
+          <p id="programIndicatorText" style="width: fit-content; margin: 0%; padding: 0%; margin-left: 60px;">Izvajanje programa</p>
+          <img id="programIndicator" src="#" alt="program aktiven?" style="height: 25px; margin-left: 20px;">
         </div>
         {% if not current_user.is_authenticated %}
           <form action="{{url_for('users.login')}}" class="d-flex" role="search" method="POST">

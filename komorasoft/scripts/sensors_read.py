@@ -1,19 +1,22 @@
 """Functions for data acquisition from various sensors
 """
 import time
-import board
-import adafruit_sht31d
-import busio
-import adafruit_scd4x
-import RPi.GPIO as GPIO
-import serial
+from datetime import datetime
+# import board
+# import adafruit_sht31d
+# import busio
+# import adafruit_scd4x
+# import RPi.GPIO as GPIO
+# import serial
 
 
 def sensors_read() -> list:
-    T1, H1, T2, H2 = temp_humi_read()
-    CO2, T3, H3 = co2_temp_humi_read()
-    H2, _, O2 = h2o2_read()
-    return [T1,T2,T3,H1,H2,H3,CO2,H2,O2]
+    # T1, H1, T2, H2 = temp_humi_read()
+    # CO2, T3, H3 = co2_temp_humi_read()
+    # H2, _, O2 = h2o2_read()
+    # return [T1,T2,T3,H1,H2,H3,CO2,H2,O2]
+    print(f"Reading from sensors... {datetime.now()}")
+    time.sleep(2)
 
 def sensors_show():
     print("Reading from sensors:\n(1-2) SHT31-D (2x) [Temp, Humidity Sensor]\n(3) SCD41 [CO2, Temp, Humidity Sensor]\n(4) MQ-8 [Hydrogen Gas Sensor]\n(5) ME2-O2-fi20 [O2 Gas Sensor]")

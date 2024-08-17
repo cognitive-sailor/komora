@@ -212,15 +212,21 @@ def check_active_settings():
 @simple.route('/start', methods=['POST'])
 @login_required
 def start():
-    settingID = request.form.get('confirmStart_SettingID') # get ID of the setting the user is starting..
-    update_active_setting(settingID)
-    currently_active_setting = check_active()
-    print(currently_active_setting)
-    return jsonify({"Currently active setting:" : currently_active_setting})
+    if current_user.role == "Administrator":
+        settingID = request.form.get('confirmStart_SettingID') # get ID of the setting the user is starting..
+        update_active_setting(settingID)
+        currently_active_setting = check_active()
+        print(currently_active_setting)
+        return render_template('index.html')
+    else:
+        return render_template('not_authorized.html')
 
 @simple.route('/stop', methods=['POST'])
 @login_required
 def stop():
-    stop_all() # set all settings's active attribute to False
-    message = "Zaustavili ste izvajanje programa!"
-    return jsonify(message)
+    if current_user.role == "Administrator":
+        stop_all() # set all settings's active attribute to False
+        message = "Zaustavili ste izvajanje programa!"
+        return render_template('index.html')
+    else:
+        return render_template('not_authorized.html')

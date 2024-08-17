@@ -4,8 +4,6 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 
-# from komorasoft.blueprints.actuators.models import default_db
-# from komorasoft.blueprints.auto.models import schedule_db
 
 
 db = SQLAlchemy()
@@ -19,6 +17,7 @@ def create_app():
         'settings_db': 'sqlite:///settings.db'
     }
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
     app.secret_key = 'a7d14b1b2a7ce906887ff28c5b211e1d6933fa9e8215fa843e8dc6b2e639b92aff2a33b715a9c240a8894457fda82e5d09536235774316e577052ee4cda58a40'
 
