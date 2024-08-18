@@ -57,6 +57,8 @@ import time
 from flask_socketio import SocketIO
 from komorasoft.blueprints.simple.models import Settings
 from komorasoft.scripts.sensors_read import sensors_read
+from komorasoft.blueprints.actuators.models import Actuator, control_actuator
+import asyncio
 
 flask_app = create_app()
 
@@ -65,18 +67,6 @@ socketio = SocketIO(flask_app, cors_allowed_origins="*")
 
 # Initialize the APScheduler instance
 scheduler = APScheduler()
-
-# Function to ensure the job is running
-def ensure_job_is_running(job_name, job_function, seconds):
-    job = scheduler.get_job(job_name)
-    if not job:
-        print(f"Job {job_name} is not running. Restarting the job.")
-        scheduler.add_job(id=job_name, func=job_function, trigger='interval', seconds=seconds)
-
-def job_monitor(job_name, job_function, seconds):
-    while True:
-        ensure_job_is_running(job_name, job_function, seconds)
-        time.sleep(30)
 
 # Define the job function
 def update_indicators():
@@ -87,15 +77,36 @@ def update_indicators():
             socketio.emit('update_status', {'active': active_setting.active, 'active_name': active_setting.name})
         else:
             socketio.emit('update_status', {'active': False, 'active_name': ""})
+    
 
 # Initialize and start the scheduler
 scheduler.add_job(func=update_indicators, trigger='interval', seconds=5, id='update_indicators_job')
-scheduler.start()
+scheduler.add_job(func=sensors_read, trigger='interval', seconds=5, id='Senzorji_zajem_podatkov')
+# scheduler.start()
 
-# Start a monitoring thread to ensure job is running
-monitor_thread = threading.Thread(target=job_monitor, args=('Belezenje_senzorjev', sensors_read, 10,))
-# monitor_thread.start()
+
+async def check_actuators():
+    """Check the actuators asynchronously to turn them on or off based on the timing."""
+    while True:
+        with flask_app.app_context():  # Ensure we're working within an app context
+            actuators = Actuator.query.all()
+
+            # Create a list of tasks for asyncio
+            tasks = [control_actuator(actuator) for actuator in actuators]
+            await asyncio.gather(*tasks)  # Run all tasks concurrently
+
+        await asyncio.sleep(0.5)  # Wait for 0.5 seconds before checking again
+
+def run_main_control():
+    """Run the main control loop using asyncio."""
+    asyncio.run(check_actuators())
+    
+
+
+
+
 
 # Start Flask-SocketIO server
 if __name__ == '__main__':
     socketio.run(flask_app, host='0.0.0.0', debug=True)
+    # run_main_control()

@@ -4,17 +4,31 @@ import json
 from datetime import datetime, timedelta
 
 from komorasoft.app import db
+from komorasoft.blueprints.actuators.models import Actuator
 from komorasoft.blueprints.simple.models import Settings, ActuatorSetting
 from komorasoft.scripts.frontend.updateui import update_active_setting, check_active, stop_all
+from komorasoft.scripts.main_control import main_control
 
 simple = Blueprint('simple', __name__, static_folder="static", template_folder='templates/simple')
 
+
+def serialize_actuator(actuator):
+    return {
+        'id': actuator.id,
+        'name': actuator.name,
+        'description': actuator.description,
+        # Add other fields as needed
+    }
 
 @simple.route('/')
 @login_required
 def index():
     if current_user.role == "Administrator":
-        return render_template('index.html')
+        actuators = Actuator.query.filter(~Actuator.name.in_(["Kompresor","Ventilator uparjalnika","Grelec uparjalnika","Vlažilnik"])).all() # get all user controlable actuators
+        ser_actuators = [serialize_actuator(actuator) for actuator in actuators]
+        ptc_actuators = Actuator.query.filter(Actuator.name.in_(["Ventilator uparjalnika","Grelec uparjalnika","Vlažilnik"])).all() # get all potencial user controlable actuators
+        ser_ptc_actuators = [serialize_actuator(actuator) for actuator in ptc_actuators]
+        return render_template('index.html', actuators=ser_actuators, ptc_actuators=ser_ptc_actuators)
     else:
         return render_template('not_authorized.html')
     
@@ -37,31 +51,31 @@ def save_settings():
             for actuator, actuator_settings in data.items(): # for each actuator, read data for interval and duration
                 usr_control = True if advanced else False
                 if actuator not in ["settingsID","advancedCheck","settingsDescription","settingsTitle","temperatureRange"]:
-                    intDays = actuator_settings[actuator+'IntDays']
-                    intHours = actuator_settings[actuator+'IntHours']
-                    intMinutes = actuator_settings[actuator+'IntMinutes']
-                    intSeconds = actuator_settings[actuator+'IntSeconds']
+                    IntDays = actuator_settings[actuator+'IntDays']
+                    IntHours = actuator_settings[actuator+'IntHours']
+                    IntMinutes = actuator_settings[actuator+'IntMinutes']
+                    IntSeconds = actuator_settings[actuator+'IntSeconds']
                     DurHours = actuator_settings[actuator+'DurHours']
                     DurMinutes = actuator_settings[actuator+'DurMinutes']
                     DurSeconds = actuator_settings[actuator+'DurSeconds']
 
-                    interval_length, duration_length = checkIntervalVSDuration(intDays,intHours,intMinutes,intSeconds,DurHours,DurMinutes,DurSeconds)
+                    interval_length, duration_length = checkIntervalVSDuration(IntDays,IntHours,IntMinutes,IntSeconds,DurHours,DurMinutes,DurSeconds)
                     if (interval_length > duration_length) or (interval_length == duration_length == timedelta(seconds=0)):
                         newActuatorSetting = ActuatorSetting(name=actuator,
                                                             user_control=usr_control,
-                                                            interval_days=intDays,
-                                                            interval_hours=intHours,
-                                                            interval_minutes=intMinutes,
-                                                            interval_seconds=intSeconds,
-                                                            duration_hours=DurHours,
-                                                            duration_minutes=DurMinutes,
-                                                            duration_seconds=DurSeconds,
+                                                            IntDays=IntDays,
+                                                            IntHours=IntHours,
+                                                            IntMinutes=IntMinutes,
+                                                            IntSeconds=IntSeconds,
+                                                            DurHours=DurHours,
+                                                            DurMinutes=DurMinutes,
+                                                            DurSeconds=DurSeconds,
                                                             settings_id=settings_obj.id)
                         print("test 2.1")
                         db.session.add(newActuatorSetting)
                         db.session.commit()
                         print("test 2.2")
-                        print(f"Created. Added the acutator's settings: {actuator, usr_control,intDays,intHours,intMinutes,intSeconds,settings_obj.id}")
+                        print(f"Created. Added the acutator's settings: {actuator, usr_control,IntDays,IntHours,IntMinutes,IntSeconds,settings_obj.id}")
                     else:
                         print(f'The interval is shorter than the duration at actuator setting: {actuator}')
                         return jsonify({'message': f'The interval is shorter than the duration at {actuator} setting'})
@@ -76,28 +90,28 @@ def save_settings():
                     print(editActuatorSetting)
                     print(editActuatorSetting.id)
 
-                    intDays = actuator_settings[actuator+'IntDays']
-                    intHours = actuator_settings[actuator+'IntHours']
-                    intMinutes = actuator_settings[actuator+'IntMinutes']
-                    intSeconds = actuator_settings[actuator+'IntSeconds']
+                    IntDays = actuator_settings[actuator+'IntDays']
+                    IntHours = actuator_settings[actuator+'IntHours']
+                    IntMinutes = actuator_settings[actuator+'IntMinutes']
+                    IntSeconds = actuator_settings[actuator+'IntSeconds']
                     DurHours = actuator_settings[actuator+'DurHours']
                     DurMinutes = actuator_settings[actuator+'DurMinutes']
                     DurSeconds = actuator_settings[actuator+'DurSeconds']
 
-                    interval_length, duration_length = checkIntervalVSDuration(intDays,intHours,intMinutes,intSeconds,DurHours,DurMinutes,DurSeconds)
+                    interval_length, duration_length = checkIntervalVSDuration(IntDays,IntHours,IntMinutes,IntSeconds,DurHours,DurMinutes,DurSeconds)
                     if (interval_length > duration_length) or (interval_length == duration_length == timedelta(seconds=0)):
                         editActuatorSetting.user_control = usr_control
-                        editActuatorSetting.interval_days = intDays
-                        editActuatorSetting.interval_hours = intHours
-                        editActuatorSetting.interval_minutes = intMinutes
-                        editActuatorSetting.interval_seconds = intSeconds
-                        editActuatorSetting.duration_hours = DurHours
-                        editActuatorSetting.duration_minutes = DurMinutes
-                        editActuatorSetting.duration_seconds = DurSeconds
+                        editActuatorSetting.IntDays = IntDays
+                        editActuatorSetting.IntHours = IntHours
+                        editActuatorSetting.IntMinutes = IntMinutes
+                        editActuatorSetting.IntSeconds = IntSeconds
+                        editActuatorSetting.DurHours = DurHours
+                        editActuatorSetting.DurMinutes = DurMinutes
+                        editActuatorSetting.DurSeconds = DurSeconds
                         editActuatorSetting.settings_id = settings_obj.id
                     
                         db.session.commit()
-                        print(f"Edited. Changed the acutator's settings: {actuator, usr_control,intDays,intHours,intMinutes,intSeconds,settings_obj.id}")
+                        print(f"Edited. Changed the acutator's settings: {actuator, usr_control,IntDays,IntHours,IntMinutes,IntSeconds,settings_obj.id}")
                     else:
                         return jsonify({'message': f'The interval is shorter than the duration at actuator setting: {actuator}'})
 
@@ -112,7 +126,7 @@ def save_settings():
         existingSettings = Settings.query.filter_by(id=settingsID, name=name).first()
         print(f"Submitted data: {data}")
         if existingSettings: # assign the new values = overwrite the Settings
-            print(f"Editing. Name: {name}v")
+            print(f"Editing. Name: {name}")
             # Edit the Settings
             existingSettings.description = description # update description
             existingSettings.temperature = temperature # update temperature
@@ -124,15 +138,11 @@ def save_settings():
         else:
             print(f"Creating. Name: {name}, ID: {settingsID}")
             # Create new Settings
-            print("test 0")
             newSettings = Settings(name=name,description=description,advanced=advanced,temperature=temperature)
-            print("test 1")
             db.session.add(newSettings)
             db.session.commit()
-            print("test 2")
             # set the rest of the parameters
             settings2db(newSettings, data, advanced, False)
-            print("test 3")
             return jsonify("Created new settings",data), 201
     else:
         return render_template('not_authorized.html')
@@ -162,17 +172,18 @@ def get_setting(setting_id):
     return_data['settingsDescription'] = setting.description
     return_data['temperature'] = temperature
     return_data['advanced'] = advanced
+    return_data['optionals'] = ["Ventilator uparjalnika","Grelec uparjalnika","Vlažilnik"]
     if act_settings:
         for act in act_settings:
             # Convert the setting to a dictionary
             return_data[act.name] = {
-                "interval_days": act.interval_days,
-                "interval_hours": act.interval_hours,
-                "interval_minutes": act.interval_minutes,
-                "interval_seconds": act.interval_seconds,
-                "duration_hours": act.duration_hours,
-                "duration_minutes": act.duration_minutes,
-                "duration_seconds": act.duration_seconds,
+                "IntDays": act.IntDays,
+                "IntHours": act.IntHours,
+                "IntMinutes": act.IntMinutes,
+                "IntSeconds": act.IntSeconds,
+                "DurHours": act.DurHours,
+                "DurMinutes": act.DurMinutes,
+                "DurSeconds": act.DurSeconds,
                 # Add other fields as necessary
             }
         return jsonify(return_data)
@@ -189,7 +200,7 @@ def delete_setting():
         if settings2delete:
             db.session.delete(settings2delete)
             db.session.commit()
-            return render_template('index.html')
+            return redirect(url_for('simple.index'))
         else:
             return jsonify({'message': f'No settings found with ID {setting_id}'}), 404
     else:
@@ -209,24 +220,43 @@ def check_active_settings():
     
 
 
-@simple.route('/start', methods=['POST'])
+@simple.route('/start', methods=['GET','POST'])
 @login_required
 def start():
+
+    def setting2Actuator(act_name,data):
+        print(f"setting2Actuator:\nActuator: {act_name}, data: {data}")
+        actuator = Actuator.query.filter_by(name=act_name) # get the actuator
+        actuator.interval = timedelta(days=int(data['IntDays']),hours=int(data['IntHours']),minutes=int(data['IntMinutes']),seconds=int(data['IntSeconds']))
+        actuator.duration = timedelta(hours=int(data['DurHours']),minutes=int(data['DurMinutes']),seconds=int(data['DurSeconds']))
+        db.session.commit()
+
+
     if current_user.role == "Administrator":
         settingID = request.form.get('confirmStart_SettingID') # get ID of the setting the user is starting..
-        update_active_setting(settingID)
+        update_active_setting(settingID) # set this setting to active, others to inactive
         currently_active_setting = check_active()
-        print(currently_active_setting)
-        return render_template('index.html')
+
+        # prepare all data for the main_control script
+        data = get_setting(settingID).get_json() # get the submitted setting and strip it of HTTP to get only JSON
+        optionals = data['optionals']
+        # set interval and duration for every actuator in the database
+        for actuator_setting in data.items():
+            print(actuator_setting[0]) ####################################################################################################################
+            if actuator_setting[0] not in (optionals or ["id","settingTitle","settingsDescription","temperature","advanced"]):
+                setting2Actuator(actuator_setting[0],actuator_setting[1])
+        # main_control(data) # send setting's data to the main control function
+
+        return redirect(url_for('simple.index'))
     else:
         return render_template('not_authorized.html')
 
-@simple.route('/stop', methods=['POST'])
+@simple.route('/stop', methods=['GET','POST'])
 @login_required
 def stop():
     if current_user.role == "Administrator":
         stop_all() # set all settings's active attribute to False
         message = "Zaustavili ste izvajanje programa!"
-        return render_template('index.html')
+        return redirect(url_for('simple.index'))
     else:
         return render_template('not_authorized.html')

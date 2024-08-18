@@ -12,7 +12,7 @@ def index():
     actuators = Actuator.query.all()
     #cols = [column.name for column in Actuator.__table__.columns]
     cols = ["ID","Naziv","Stanje","Opis","Dejanja"]
-    rows = [[actuator.sid,actuator.name,actuator.state,actuator.description] for actuator in actuators]
+    rows = [[actuator.id,actuator.name,actuator.is_active,actuator.description] for actuator in actuators]
     return render_template('actuators/index.html', actuators=actuators, columns=cols, rows=rows)
 
 @actuators.route('/create', methods=['GET','POST'])
@@ -24,13 +24,13 @@ def create():
         name = request.form.get('naziv')
         desc = request.form.get('description')
         desc = desc if desc != '' else None # dodaj opis, če ga je uporabnik definiral
-        state = False # preveri dejansko stanje aktuatorja!
+        is_active = False # preveri dejansko stanje aktuatorja!
 
         existing_actuators = Actuator.query.all() # get all sensors
         actuator_names = [actuator.name for actuator in existing_actuators] # get all sensor names
 
         if name not in actuator_names:
-            actuator = Actuator(name=name, description=desc, state=state) # dodaj nov aktuator
+            actuator = Actuator(name=name, description=desc, is_active=is_active) # dodaj nov aktuator
 
             db.session.add(actuator)
             db.session.commit()
@@ -68,14 +68,14 @@ def edit():
         name = request.form.get('name')
         desc = request.form.get('description')
         desc = desc if desc != '' else None # dodaj opis, če ga je uporabnik definiral
-        state = False # preveri dejansko stanje aktuatorja!
+        is_active = False # preveri dejansko stanje aktuatorja!
 
         actuator = Actuator.query.filter(Actuator.name == name_old).first()
 
         if current_user.is_authenticated and current_user.role=="Administrator":
             actuator.name = name
             actuator.description = desc
-            actuator.state = state
+            actuator.is_active = is_active
             db.session.commit()  # Commit the changes to the database
             return redirect(url_for('actuators.index'))
         else:

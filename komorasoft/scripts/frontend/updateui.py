@@ -5,9 +5,10 @@ from flask import jsonify
 def check_active():
     # Check if any and which setting is currently active
     active_setting = Settings.query.filter_by(active=True).first()
-    return active_setting.name
+    return active_setting.name if active_setting else None
     
 def update_active_setting(setting_id):
+    stop_all() # set all settings to not active
     # Get all settings from the database and set their active attribute to False
     existingSettings = Settings.query.all()
     for setting in existingSettings:

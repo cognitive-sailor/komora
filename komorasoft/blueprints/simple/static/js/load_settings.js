@@ -90,8 +90,11 @@ function onSelectedSettings(settingId) {
             // Add event listener to advancedCheck to monitor changes
             advancedCheck.addEventListener('click', function() {
                 if (!advancedCheck.checked) {
-                    // When unchecked, set the specific element values to 0
-                    setElementValuesToZero();
+                    const optionals = data['optionals']
+                    optionals.forEach((item,index)=>{
+                        // When unchecked, set the specific element values to 0
+                        setElementValuesToZero(item);
+                    })
                 }
             });
 
@@ -119,7 +122,7 @@ function onSelectedSettings(settingId) {
                 Object.keys(settings).forEach(key => {
                     const value = settings[key];
 
-                    const full_key = category + myDict[key];
+                    const full_key = category + key;
                     console.log(full_key + " : " + value);
 
                     // Find the corresponding HTML element by ID
@@ -144,8 +147,14 @@ window.onload = loadSettings;
 
 
 // Function to set specific element values to 0
-function setElementValuesToZero() {
-    const elementsToReset = ['venUparIntDays','venUparIntHours','venUparIntMinutes','venUparIntSeconds','venUparDurHours','venUparDurMinutes','venUparDurSeconds','grelecIntDays','grelecIntHours','grelecIntMinutes','grelecIntSeconds','grelecDurHours','grelecDurMinutes','grelecDurSeconds','vlazIntDays','vlazIntHours','vlazIntMinutes','vlazIntSeconds','vlazDurHours','vlazDurMinutes','vlazDurSeconds']; // Replace with actual IDs of the elements you want to reset
+function setElementValuesToZero(actuator_name) {
+    const elementsToReset = [actuator_name+'IntDays',
+                            actuator_name+'IntHours',
+                            actuator_name+'IntMinutes',
+                            actuator_name+'IntSeconds',
+                            actuator_name+'DurHours',
+                            actuator_name+'DurMinutes',
+                            actuator_name+'DurSeconds']; // Replace with actual IDs of the elements you want to reset
 
     elementsToReset.forEach(elementId => {
         const element = document.getElementById(elementId);

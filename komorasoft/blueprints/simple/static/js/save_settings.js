@@ -1,7 +1,3 @@
-
-
-
-
 document.getElementById('saveSettingsButton').addEventListener('click', function() {
     const formData = {};
 

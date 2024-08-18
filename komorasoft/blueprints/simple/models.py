@@ -9,17 +9,17 @@ class ActuatorSetting(db.Model):
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
     name = db.Column(db.String, nullable=False)
     user_control = db.Column(db.Boolean, nullable=False, default=True)
-    interval_days = db.Column(db.Integer, nullable=False, default=0)
-    interval_hours = db.Column(db.Integer, nullable=False, default=0)
-    interval_minutes = db.Column(db.Integer, nullable=False, default=0)
-    interval_seconds = db.Column(db.Integer, nullable=False, default=0)
-    duration_hours = db.Column(db.Integer, nullable=False, default=0)
-    duration_minutes = db.Column(db.Integer, nullable=False, default=0)
-    duration_seconds = db.Column(db.Integer, nullable=False, default=0)
+    IntDays = db.Column(db.Integer, nullable=False, default=0)
+    IntHours = db.Column(db.Integer, nullable=False, default=0)
+    IntMinutes = db.Column(db.Integer, nullable=False, default=0)
+    IntSeconds = db.Column(db.Integer, nullable=False, default=0)
+    DurHours = db.Column(db.Integer, nullable=False, default=0)
+    DurMinutes = db.Column(db.Integer, nullable=False, default=0)
+    DurSeconds = db.Column(db.Integer, nullable=False, default=0)
     settings_id = db.Column(db.String, db.ForeignKey('settings.id'), nullable=False)
 
     def __repr__(self) -> str:
-        return f"{self.name} ActuatorSetting: active every = {self.interval_days} d, {self.interval_hours} h, {self.interval_minutes} min, {self.interval_seconds} s,\n, for the duration of = {self.duration_hours} h, {self.duration_minutes} min, {self.duration_seconds} s.\n Belongs to {self.settings_id}"
+        return f"{self.name} ActuatorSetting: active every = {self.IntDays} d, {self.IntHours} h, {self.IntMinutes} min, {self.IntSeconds} s,\n, for the duration of = {self.DurHours} h, {self.DurMinutes} min, {self.DurSeconds} s.\n Belongs to {self.settings_id}"
 
 class Settings(db.Model):
     __bind_key__ = 'settings_db'
