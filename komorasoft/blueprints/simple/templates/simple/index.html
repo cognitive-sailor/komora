@@ -1,0 +1,198 @@
+{% extends('base.html')%}
+{% block title %}Enostavno upravljanje{% endblock %}
+
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('simple.static', filename='css/styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('simple.static', filename='css/zazeni_style.css') }}">
+<h1>ENOSTAVNO UPRAVLJANJE</h1>
+<div id="simple-container1">
+    <div id="simple-row1" class="row">
+        <div id="simple-col1" class="col col-md-9">
+            <!-- <h4>Nastavi</h4>
+            <br> -->
+
+            {% include 'settings.html' %}
+
+            <!-- TEMPERATURE -->
+            <div class="input-group mb-3 d-flex align-items-center" id="TempField">
+                <span class="input-group-text custom-bg1" id="tempIconBox">Temperatura</span>
+                <span class="input-group-text custom-bg2" id="tempValue">˚C</span>
+                <input type="range" class="form-range" min="0" max="25" step="1" id="temperatureRange" value="4">
+            </div>
+            <!-- OPTIONAL PARAMETERS -->
+            <div class="input-group d-flex flex-column justify-items-center" id="optiParamsField">
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" role="switch" id="advancedCheck" data-bs-toggle="collapse" href="#collapseExample">
+                    <label class="form-check-label" for="advancedCheck" tooltip="asdf">Napredno</label>
+                </div>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body advancedMenu" id="advancedMenu">
+                        {% for ptc_actuator in ptc_actuators %}
+                        <div class="row simpleRow">
+                            <div class="col-md-1 simpleCol">
+                                <img class="simpleImages" src="{{ url_for('manual.static', filename='images/' ~ ptc_actuator.id ~ '.png') }}" alt="{{ptc_actuator.name}}">
+                            </div>
+                            <div class="col-md-2 simpleCol">
+                                <h6>{{ptc_actuator.name}}</h6>
+                            </div>
+                            <div class="col-md-3 simpleCol">
+                                <div class="row row-time">
+                                    <h7 class="col timeInput">INTERVAL -> Vklopi na vsake: </h7>
+                                </div>
+                                <div class="row row-time">
+                                    <h7 class="col timeInput">TRAJANJE -> za obdobje:</h7>
+                                </div>
+                            </div>
+                            <div class="col  timeDuration">
+                                <div class="row row-time">
+                                        <!-- <input type="text" class="col form-control-sm timeInput" placeholder="Dni" aria-label="Dni"> -->
+                                        <select class="col form-select form-select-sm myselection" id="{{ptc_actuator.name}}IntDays" aria-label="Small select example">
+                                            <!-- JS code here -->
+                                        </select>
+                                        <select class="col form-select form-select-sm myselection" id="{{ptc_actuator.name}}IntHours" aria-label="Small select example">
+                                            <!-- JS code here -->
+                                        </select>
+                                        <select class="col form-select form-select-sm myselection" id="{{ptc_actuator.name}}IntMinutes" aria-label="Small select example">
+                                            <!-- JS code here -->
+                                        </select>
+                                        <select class="col form-select form-select-sm myselection" id="{{ptc_actuator.name}}IntSeconds" aria-label="Small select example">
+                                            <!-- JS code here -->
+                                        </select>
+                                </div>
+                                <div class="row row-time">
+                                    <div class="col-md-3"></div>
+                                    <select class="col form-select form-select-sm myselection" id="{{ptc_actuator.name}}DurHours" aria-label="Small select example">
+                                    <!-- JS code here -->
+                                    </select>
+                                    <select class="col form-select form-select-sm myselection" id="{{ptc_actuator.name}}DurMinutes" aria-label="Small select example">
+                                    <!-- JS code here -->
+                                    </select>
+                                    <select class="col form-select form-select-sm myselection" id="{{ptc_actuator.name}}DurSeconds" aria-label="Small select example">
+                                    <!-- JS code here -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>                    
+                </div>
+                <!-- USER DEFINED PARAMETERS -->
+
+                {% for actuator in actuators %}
+                <div class="row simpleRow">
+                    <div class="col-md-1 simpleCol">
+                        <img class="simpleImages" src="{{ url_for('manual.static', filename='images/' ~ actuator.id ~ '.png') }}" alt="{{actuator.name}}">
+                    </div>
+                    <div class="col-md-2 simpleCol">
+                        <h6>{{actuator.name}}</h6>
+                    </div>
+                    <div class="col-md-3 simpleCol">
+                        <div class="row row-time">
+                            <h7 class="col timeInput">INTERVAL -> Vklopi na vsake: </h7>
+                        </div>
+                        <div class="row row-time">
+                            <h7 class="col timeInput">TRAJANJE -> za obdobje:</h7>
+                        </div>
+                    </div>
+                    <div class="col  timeDuration">
+                        <div class="row row-time">
+                                <!-- <input type="text" class="col form-control-sm timeInput" placeholder="Dni" aria-label="Dni"> -->
+                                <select class="col form-select form-select-sm myselection" id="{{actuator.name}}IntDays" aria-label="Small select example">
+                                    <!-- JS code here -->
+                                  </select>
+                                  <select class="col form-select form-select-sm myselection" id="{{actuator.name}}IntHours" aria-label="Small select example">
+                                    <!-- JS code here -->
+                                  </select>
+                                  <select class="col form-select form-select-sm myselection" id="{{actuator.name}}IntMinutes" aria-label="Small select example">
+                                    <!-- JS code here -->
+                                  </select>
+                                  <select class="col form-select form-select-sm myselection" id="{{actuator.name}}IntSeconds" aria-label="Small select example">
+                                    <!-- JS code here -->
+                                  </select>
+                        </div>
+                        <div class="row row-time">
+                            <div class="col-md-3"></div>
+                            <select class="col form-select form-select-sm myselection" id="{{actuator.name}}DurHours" aria-label="Small select example">
+                            <!-- JS code here -->
+                            </select>
+                            <select class="col form-select form-select-sm myselection" id="{{actuator.name}}DurMinutes" aria-label="Small select example">
+                            <!-- JS code here -->
+                            </select>
+                            <select class="col form-select form-select-sm myselection" id="{{actuator.name}}DurSeconds" aria-label="Small select example">
+                            <!-- JS code here -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+            </div>
+            
+        </div>
+
+        {% include 'execute_panel.html' %}
+        {% include 'confirmSTART.html' %}
+        {% include 'confirmSTOP.html' %}
+        
+        
+        
+    </div>
+</div>
+
+{% include 'delete_settings.html' %}
+
+
+<!-- JS scripts -->
+
+<script src="{{ url_for('simple.static', filename='js/script.js') }}"></script>
+<script src="{{ url_for('simple.static', filename='js/save_settings.js') }}"></script>
+<script src="{{ url_for('simple.static', filename='js/load_settings.js') }}"></script>
+<script src="{{ url_for('simple.static', filename='js/submit_settings.js') }}"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("JavaScript is running");
+        // Function to create options for a select element
+        function createOptions(selectElement, maxValue, unit) {
+            for (let i = 0; i <= maxValue; i++) {
+                const option = document.createElement("option");
+                option.value = i;
+                option.text = i + " " + unit;
+                selectElement.appendChild(option);
+            }
+        }
+
+        // Retrieve actuator data from the server-rendered template
+        const actuators = JSON.parse('{{ actuators | tojson | safe }}');
+        const ptcActuators = JSON.parse('{{ ptc_actuators | tojson | safe }}');
+
+
+        // Function to populate options for a given actuator
+        function populateOptionsForActuators(actuator) {
+            const name = actuator.name;
+
+            // Populate interval options
+            createOptions(document.getElementById(name + "IntDays"), 30, "dni");
+            createOptions(document.getElementById(name + "IntHours"), 23, "ur");
+            createOptions(document.getElementById(name + "IntMinutes"), 59, "minut");
+            createOptions(document.getElementById(name + "IntSeconds"), 59, "sekund");
+
+            // Populate duration options
+            createOptions(document.getElementById(name + "DurHours"), 23, "ur");
+            createOptions(document.getElementById(name + "DurMinutes"), 59, "minut");
+            createOptions(document.getElementById(name + "DurSeconds"), 59, "sekund");
+        }
+
+        // Iterate over all actuators and ptc_actuators to populate options
+        actuators.forEach(populateOptionsForActuators);
+        ptcActuators.forEach(populateOptionsForActuators);
+    });
+
+
+
+</script>
+
+{% endblock %}
+
+

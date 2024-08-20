@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="row">
+        <div class="dropdown dropdown-menu-dark col col-md-2">
+            <button class="btn btn-secondary dropdown-toggle settingsButton" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Nastavitve
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" id="ddSettings">
+            <!-- <li><a class="dropdown-item active" href="#" data-bs-toggle="modal" data-bs-target="#loadSettingsModal">Uvozi</a></li>
+            <li><a class="dropdown-item" href="#">Shrani</a></li>
+            <li><a class="dropdown-item" href="#">Shrani kot...</a></li> -->
+            </ul>
+        </div>
+        
+
+
+        <div class="col tooltip-container">
+            <input type="text" class="form-control" id="settingsID" hidden>
+            <input type="text" class="form-control" id="settingsTitle" placeholder="Poimenuj nastavitev">
+            <span class="tooltip-text" id="settingsDescriptionTooltip">Tukaj se bo pojavil opis izbrane nastavitve.</span>
+        </div>
+        <div class="col">
+            <input class="form-control" id="settingsDescription" placeholder="Opiši nastavitev"></input>
+        </div>
+        <div class="col">
+            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                <button class="btn btn-success" id="saveSettingsButton">Shrani</button>
+                <button type="button" class="btn btn-danger" id="deleteSettingsButton" data-bs-toggle="modal" data-bs-target="#deleteSettingsModal" onclick="deleteSettings()">Izbriši</button>
+                <button type="button" class="btn btn-warning" id="submitSettingsButton">Naloži -></button>
+            </div>
+        </div>
+    </div>
+</div><br>
+
+<!-- <div class="col" id="loadedSettingField"></div> -->
+<hr>
+
+

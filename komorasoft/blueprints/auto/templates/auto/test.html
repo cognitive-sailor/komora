@@ -1,0 +1,51 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Timeline</title>
+    <link rel="stylesheet" href="{{ url_for('auto.static', filename='css/test.css') }}">
+</head>
+<body>
+    <div class="timeline">
+        <div class="event-bar" id="event1">
+            <div class="resize-handle left"></div>
+            <div class="resize-handle right"></div>
+            <div class="event-content">Event 1</div>
+        </div>
+        <div class="event-bar" id="event2">
+            <div class="resize-handle left"></div>
+            <div class="resize-handle right"></div>
+            <div class="event-content">Event 2</div>
+        </div>
+    </div>
+    <script type="text/babel" src="{{ url_for('auto.static', filename='js/script.js') }}"></script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resizable Element</title>
+    <link rel="stylesheet" href="{{ url_for('auto.static', filename='css/test.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="resizable-box">
+            <!-- <div class="resize-handle top-left"></div>
+            <div class="resize-handle top-right"></div>
+            <div class="resize-handle bottom-left"></div>
+            <div class="resize-handle bottom-right"></div> -->
+            <!-- New handles for left and right resizing -->
+            <div class="resize-handle left"></div>
+            <div class="resize-handle right"></div>
+        </div>
+    </div>
+    <div id="tooltip" class="tooltip"></div>
+    <script src="{{ url_for('auto.static', filename='js/script.js') }}"></script>
+</body>
+</html>
+

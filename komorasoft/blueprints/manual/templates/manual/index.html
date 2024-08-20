@@ -9,17 +9,18 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 
+<h1>ROČNO UPRAVLJANJE</h1>
 <div class="container mt-5">
     <div class="row">
         {% for actuator in actuators %}
         <div class="col-md-4 mb-4">
-            <div class="card toggle-card" id="card-{{ actuator.sid }}" data-device-id="{{ actuator.sid }}" data-toggle="popover" title="{{ actuator.description }}">
-                <div class="card-title {% if actuator.state %}bg-on{% else %}bg-off{% endif %}">
+            <div class="card toggle-card" id="card-{{ actuator.id }}" data-device-id="{{ actuator.id }}" data-toggle="popover" title="{{ actuator.description }}">
+                <div id="card_head_{{actuator.id}}" class="card-title {% if actuator.is_active %}bg-on{% else %}bg-off{% endif %}">
                     {{ actuator.name }}
                 </div>
                 <div class="card-body">
                     <div class="card-image text-center" style="height: 150px;">
-                        <img src="{{ url_for('manual.static', filename='images/' ~ actuator.sid ~ '.png') }}" id="img-{{ actuator.sid }}" class="img-fluid" alt="{{ actuator.name }}">
+                        <img src="{{ url_for('manual.static', filename='images/' ~ actuator.id ~ '.png') }}" id="img-{{ actuator.id }}" class="img-fluid" alt="{{ actuator.name }}">
                     </div>
                 </div>
             </div>

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Upravljanje po protokolu{% endblock %}
+
+
+{% block content %}
+<div id="containter-1" class="container-fluid create-schedule">
+    <h1 class="glavni-naslov">Ustvarjanje protokolov</h1>
+    <div id="load-protocol">
+        <h5>Naloži</h5>
+        <div id="first-row" class="row">
+            <!-- Left Column -->
+            <div id="actuators-panel" class="col-md-2">
+                <table>
+                    <tbody>
+                    <tr class="actuator_row">
+                        <th>Dodaj</th>
+                    </tr>
+                    <tr class="actuator_row">
+                        <td class="actuator_row_data">
+                            <button class="btn gumb1" id="add_temperature" onclick="addTemperatureBlock()">Temperatura</button>
+                        </td>
+                    </tr>
+                    <tr class="actuator_row">
+                        <td class="actuator_row_data">
+                            <button class="btn gumb1" id="add_humidity" onclick="addHumidityBlock()">Vlaga</button>
+                        </td>
+                    </tr>
+                    <tr class="actuator_row">
+                        <td class="actuator_row_data">
+                            <button class="btn gumb1" id="add_nitrogen">Dušik</button>
+                        </td>
+                    </tr>
+                    <tr class="actuator_row">
+                        <td class="actuator_row_data">
+                            <button class="btn gumb1" id="add_light">Luč</button>
+                        </td>
+                    </tr>
+                    <tr class="actuator_row">
+                        <td class="actuator_row_data">
+                            <button class="btn gumb1" id="add_UV_light">UV luč</button>
+                        </td>
+                    </tr>
+                    <tr class="actuator_row">
+                        <td class="actuator_row_data">
+                            <button class="btn gumb1" id="add_ventilation">Zračenje</button>
+                        </td>
+                    </tr>
+                    <tr class="actuator_row">
+                        <td class="actuator_row_data">
+                            <button class="btn gumb1" id="add_camera">Kamera</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Right Column -->
+            <div id="graph-editor" class="col">
+                {% include 'graph_editor.html' %}
+            </div>
+        </div>
+    </div>
+</div><br><br>
+{% endblock %}

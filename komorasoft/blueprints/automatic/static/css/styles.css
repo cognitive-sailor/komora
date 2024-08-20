@@ -1,0 +1,61 @@
+/* #containter-1 {
+    background-color: rgba(0, 0, 0, 0.079);
+    padding: 2%;
+    border-radius: 15px;
+    width: 100%;
+}
+
+.glavni-naslov {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: xx-large;
+    color: rgb(255, 152, 73);
+    font-weight: bolder;
+    padding: 0%;
+}
+
+.podnaslov {
+    font-size: x-large;
+}
+
+#load-protocol {
+    background-color: rgb(116, 155, 113);
+    /* border-top-left-radius: 10px;
+    border-top-right-radius: 10px; 
+    border-radius: 10px;
+    padding: 1%;
+    overflow: hidden;
+}
+
+#actuators-panel {
+    border-bottom-left-radius: 10px;
+    padding: 1%;
+}
+
+/* .btn.gumb1 {
+    background-color: rgb(164, 194, 164);
+    width: 100%;
+    height: 30px;
+    font-size: small;
+    cursor: pointer;
+    text-align: right;
+    justify-content: center;
+    transition: background-color 500ms ease;
+}
+.btn.gumb1:hover {
+    background-color: rgb(127, 200, 255);
+} */
+
+/* .actuator_row {
+    height: 30px;
+}
+
+.actuator_row_data .btn {
+    height: 100%; 
+    padding-top: 0; 
+    padding-bottom: 0; 
+    margin-top: 0; 
+    margin-bottom: 0; 
+    line-height: 30px; 
+    width: 100%; 
+    box-sizing: border-box; 
+} */

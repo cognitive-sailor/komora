@@ -1,0 +1,38 @@
+body{
+    background-color: rgb(63, 96, 72);
+    width: 100%;
+}
+h1{
+    color: rgba(209, 255, 202, 0.774);
+    }
+h3{ color: rgba(209, 255, 202, 0.774)}
+p{
+    color: rgb(123, 143, 107);
+}
+a{
+    color: #afd04d;
+}
+
+
+/* The entire scrollbar */
+::-webkit-scrollbar {
+    width: 12px;  /* Width of the scrollbar */
+}
+
+/* The part of the scrollbar that the user can click and drag */
+::-webkit-scrollbar-thumb {
+    background-color: rgb(60, 81, 58);  /* Color of the scrollbar thumb */
+    border-radius: 10px;         /* Roundness of the scrollbar thumb */
+    border: 3px solid transparent; /* Creates a padding around the thumb */
+}
+
+/* The background of the scrollbar */
+::-webkit-scrollbar-track {
+    background-color: rgb(162, 194, 162); /* Color of the track */
+    border-radius: 10px;         /* Roundness of the track */
+}
+
+/* When hovering over the scrollbar thumb */
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(81, 119, 77);  /* Change color on hover */
+}

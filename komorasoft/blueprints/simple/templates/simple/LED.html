@@ -1,0 +1,72 @@
+<div class="row simpleRow">
+    <div class="col-md-1 simpleCol">
+        <img class="simpleImages" src="{{url_for('simple.static', filename='images/4.png')}}" alt="LED">
+    </div>
+    <div class="col-md-2 simpleCol">
+        <h6>LED</h6>
+    </div>
+    <div class="col-md-3 simpleCol">
+        <div class="row row-time">
+            <h7 class="col timeInput">INTERVAL -> Vklopi na vsake: </h7>
+        </div>
+        <div class="row row-time">
+            <h7 class="col timeInput">TRAJANJE -> za obdobje:</h7>
+        </div>
+    </div>
+    <div class="col  timeDuration">
+        <div class="row row-time">
+                <!-- <input type="text" class="col form-control-sm timeInput" placeholder="Dni" aria-label="Dni"> -->
+                <select class="col form-select form-select-sm myselection" id="LEDIntDays" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+                  <select class="col form-select form-select-sm myselection" id="LEDIntHours" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+                  <select class="col form-select form-select-sm myselection" id="LEDIntMinutes" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+                  <select class="col form-select form-select-sm myselection" id="LEDIntSeconds" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+        </div>
+        <div class="row row-time">
+            <div class="col-md-3"></div>
+            <select class="col form-select form-select-sm myselection" id="LEDDurHours" aria-label="Small select example">
+            <!-- JS code here -->
+            </select>
+            <select class="col form-select form-select-sm myselection" id="LEDDurMinutes" aria-label="Small select example">
+            <!-- JS code here -->
+            </select>
+            <select class="col form-select form-select-sm myselection" id="LEDDurSeconds" aria-label="Small select example">
+            <!-- JS code here -->
+            </select>
+        </div>
+    </div>
+</div>
+
+<script>
+    function generateSelectOptions(selectElementId, rangeEnd, units) {
+    const selectElement = document.getElementById(selectElementId);
+    
+    // Clear existing options (optional)
+    selectElement.innerHTML = '';
+
+    // Create and append options
+    for (let i = 0; i <= rangeEnd; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `${i} ${units}`; // Adjust textContent as needed
+        selectElement.appendChild(option);
+        }
+    }
+
+    // Call the function to generate options from 0 to 31
+    generateSelectOptions('LEDIntDays', 30, 'dni');
+    generateSelectOptions('LEDIntHours', 23, 'ur');
+    generateSelectOptions('LEDIntMinutes', 59, 'minut');
+    generateSelectOptions('LEDIntSeconds', 59, 'sekund');
+
+    generateSelectOptions('LEDDurHours', 23, 'ur');
+    generateSelectOptions('LEDDurMinutes', 59, 'minut');
+    generateSelectOptions('LEDDurSeconds', 59, 'sekund');
+</script>

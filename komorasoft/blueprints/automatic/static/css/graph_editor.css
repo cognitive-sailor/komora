@@ -1,0 +1,74 @@
+#graph-editor {
+    width: 600px;   /* Fixed width for the parent */
+    border: 1px solid #ff0000;  /* Optional: Border for the parent */
+    overflow: visible;  /* Prevents the child from overflowing the parent */
+    position: relative;  /* Required if child uses absolute positioning */
+    padding: 0%;
+    background-color: lightblue;
+    overflow-x: auto;  /* Horizontal scroll only */
+    overflow-y: hidden; /* No vertical scrolling */
+}
+
+
+/* Parent div */
+.scrollable-container {
+    display: flex;
+    flex-wrap: nowrap; /* Prevents wrapping of child elements */
+    width: 1500px;      /* Fixed width */
+    height: 100%;
+    border: 1px solid #8c00ff;
+    padding: 0;        /* Remove padding to prevent overflow issues */
+    overflow: auto;
+    box-sizing: border-box; /* Ensure padding and border are included in width/height */
+}
+
+/* Child divs */
+.child {
+    flex: 0 0 auto;   /* Prevent child elements from shrinking */
+    width: 100px;     /* Fixed width for each child */
+    height: 30px;    /* Fixed height for each child */
+    margin: 0;        /* Remove margin to prevent overflow issues */
+    background-color: #6a72ff;
+    color: rgb(8, 44, 24);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.myrow {
+    height: 30px; /* Fixed height for each row */
+    border: 1px solid #000000; /* Optional: border for each row */
+    display: flex; /* Flexbox layout for each row */
+    align-items: center; /* Vertically center content */
+    justify-content: center; /* Horizontally center content */
+    overflow: hidden;
+}
+
+
+/* SCROLL BAR */
+/* The entire scrollbar */
+::-webkit-scrollbar {
+    width: 10px;  /* Width of the scrollbar */
+    height: 10px;
+}
+
+/* The part of the scrollbar that the user can click and drag */
+::-webkit-scrollbar-thumb {
+    background-color: rgb(90, 129, 46);  /* Color of the scrollbar thumb */
+    border-radius: 5px;         /* Roundness of the scrollbar thumb */
+}
+
+/* The background of the scrollbar */
+::-webkit-scrollbar-track {
+    background-color: rgb(181, 210, 174); /* Color of the track */
+    border-radius: 10px;         /* Roundness of the track */
+}
+
+/* When hovering over the scrollbar thumb */
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(64, 97, 59);  /* Change color on hover */
+}

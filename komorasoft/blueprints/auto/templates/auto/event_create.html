@@ -1,0 +1,101 @@
+<!-- Create Event Modal -->
+<div class="modal fade" id="createEventModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="createEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 60%;">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5" id="createEventModalLabel" style="color: chartreuse;">Ustvari dogodek</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"><br>
+                <form id="createEventForm" action="{{url_for('auto.add_event')}}" method="POST">
+                    <h5 style="color: rgb(255, 255, 255);">Aktuator</h5>
+                    <input type="hidden" id="createEventScheduleId" name="createEventScheduleId">
+                    <div class="row g-2">
+                        <div class="col-md-8">
+                            <div class="form-floating" required>
+                                <select class="form-select" id="actuatorSelect" aria-label="Izberi aktuator", name="izbran_aktuator">
+                                <option selected id="selectedOptionActuator">Izbran aktuator</option>
+                                        <!-- JS will populate options with available actuators here -->
+                                </select>
+                                <label for="floatingSelect">Izberi aktuator</label>
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="status_aktuatorja">
+                                <label class="form-check-label" for="flexSwitchCheckDefault" style="color: white;">Vklop/Izklop</label>
+                              </div>
+                        </div>
+                    </div><br><br>
+
+
+
+                    <h5 style="color: rgb(255, 255, 255);">Čas od začetka izvajanja protokola</h5>
+                    <div class="row g-2">
+                        <div class="col">
+                            <!-- Dnevi -->
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Dan" aria-label="Dan" aria-describedby="basic-addon2" value="0" name="dni" required>
+                                <span class="input-group-text" id="dan">dni</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Ure -->
+                            <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Ura" aria-label="Ura" aria-describedby="basic-addon2" value="0" name="ur" required>
+                            <span class="input-group-text" id="basic-addon2">ur</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Minute -->
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Minuta" aria-label="Minuta" aria-describedby="basic-addon2" value="0" name="minut" required>
+                                <span class="input-group-text" id="basic-addon2">minut</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Sekunde -->
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Sekunda" aria-label="Sekunda" aria-describedby="basic-addon2" value="0" name="sekund" required>
+                                <span class="input-group-text" id="basic-addon2">sekund</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div align="right">
+                        <button type="submit" class="btn btn-primary">Potrdi</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // Function to fetch actuators and populate the select element
+    function populateActuators() {
+        fetch('/auto/get_actuators', { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
+                const actuatorSelect = document.getElementById('actuatorSelect');
+                actuatorSelect.innerHTML = '<option selected="false"> </option>';  // Clear existing options
+
+                data.forEach(actuator => {
+                    const option = document.createElement('option');
+                    option.value = actuator.name;
+                    option.textContent = actuator.name;
+                    actuatorSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading actuators:', error));
+    }
+
+    // Event listener to populate actuators when the modal is shown
+    const createEventModal = document.getElementById('createEventModal');
+    createEventModal.addEventListener('show.bs.modal', populateActuators);
+});
+</script>
+    

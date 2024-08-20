@@ -1,6 +1,82 @@
-{% extends('base.html')%}
+{% extends 'base.html' %}
 {% block title %}Upravljanje po protokolu{% endblock %}
 
+
 {% block content %}
-<p>Zdravo, tukaj se aktuatorji upravljajo po protokolu.</p>
+<div class="container-fluid create-schedule">
+    <h1 class="glavni-naslov">Ustvarjanje protokolov</h1>
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-md-5">
+            <h3 class="podnaslov">Obstoječi protokoli</h3>
+            <div class="scrollable-table-container">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="schedulesTable">
+                        <thead>
+                            <tr>
+                                <th>Naziv</th>
+                                <th>Opis</th>
+                                <th>Čas začetka</th>
+                                <th>Dejanja</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Existing schedules will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div><br>
+
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createScheduleModal">
+                Dodaj nov protokol
+            </button>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col">
+            <h3 class="podnaslov" id="eventsHeading">Dogodki aktuatorjev</h3>
+            <div class="scrollable-table-container">
+                <div class="table-responsive events" id="eventsDiv">
+                    <table class="table table-striped table-borderless" id="eventsTable">
+                        <thead>
+                            <tr>
+                                <th>Naziv aktuatorja</th>
+                                <th>Stanje</th>
+                                <th>Zamik [s]</th>
+                                <th>Abs čas</th>
+                                <th>Dejanja</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Actuator events will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div><br>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createEventModal">
+                Dodaj nov dogodek
+            </button>
+
+
+        </div>
+    </div>
+</div><br><br>
+
+<!-- Bootstrap Modals -->
+{% include 'auto/schedule_create.html' %}
+{% include 'auto/schedule_edit.html' %}
+{% include 'auto/schedule_remove.html' %}
+
+{% include 'auto/event_create.html' %}
+{% include 'auto/event_edit.html' %}
+{% include 'auto/event_remove.html' %}
+
+<!-- Include execution section for starting protocols -->
+{% include 'auto/execution.html' %}
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('auto.static', filename='js/app.js') }}"></script>
 {% endblock %}

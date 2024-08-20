@@ -1,0 +1,32 @@
+<!-- Delete Settings Modal -->
+<div class="modal fade" id="deleteSettingsModal" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="deleteSettingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 60%;">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5" id="deleteSettingsModalLabel" style="color: chartreuse;">
+                    Izbriši nastavitev
+                </h5>
+                <button id="deleteSettingsCloseBtn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div><br><br>
+            
+            <div class="container">
+                <div class="row">
+                    <img class="col" src="{{url_for('static', filename='images/garbage.png')}}" alt="", style="max-width: 100px;">
+                    <div class="col">
+                        <p class="row">Ste prepričani, da želite odstraniti celotno nastavitev? Vsi parametri bodo trajno izbrisani, ukaz je nepovračljiv.</p>
+                        <h3 class="row" id="deleteTitle">Nastavitev</h3>
+                    </div>
+                </div>
+                <form id="removeScheduleForm" action="{{url_for('simple.delete_setting')}}" method="POST">
+                    <input id="deleteSettingId" name="deleteSettingId" hidden>
+                    <div align="right">
+                        <button type="submit" class="btn btn-primary">Potrdi</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Prekliči</button>
+                    </div>
+                </form><br><br>
+            </div>
+            
+        </div>
+    </div>
+</div>
+    

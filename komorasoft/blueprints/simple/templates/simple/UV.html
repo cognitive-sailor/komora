@@ -1,0 +1,72 @@
+<div class="row simpleRow">
+    <div class="col-md-1 simpleCol">
+        <img class="simpleImages" src="{{url_for('simple.static', filename='images/5.png')}}" alt="UV">
+    </div>
+    <div class="col-md-2 simpleCol">
+        <h6>UV</h6>
+    </div>
+    <div class="col-md-3 simpleCol">
+        <div class="row row-time">
+            <h7 class="col timeInput">INTERVAL -> Vklopi na vsake: </h7>
+        </div>
+        <div class="row row-time">
+            <h7 class="col timeInput">TRAJANJE -> za obdobje:</h7>
+        </div>
+    </div>
+    <div class="col  timeDuration">
+        <div class="row row-time">
+                <!-- <input type="text" class="col form-control-sm timeInput" placeholder="Dni" aria-label="Dni"> -->
+                <select class="col form-select form-select-sm myselection" id="UVIntDays" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+                  <select class="col form-select form-select-sm myselection" id="UVIntHours" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+                  <select class="col form-select form-select-sm myselection" id="UVIntMinutes" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+                  <select class="col form-select form-select-sm myselection" id="UVIntSeconds" aria-label="Small select example">
+                    <!-- JS code here -->
+                  </select>
+        </div>
+        <div class="row row-time">
+            <div class="col-md-3"></div>
+            <select class="col form-select form-select-sm myselection" id="UVDurHours" aria-label="Small select example">
+            <!-- JS code here -->
+            </select>
+            <select class="col form-select form-select-sm myselection" id="UVDurMinutes" aria-label="Small select example">
+            <!-- JS code here -->
+            </select>
+            <select class="col form-select form-select-sm myselection" id="UVDurSeconds" aria-label="Small select example">
+            <!-- JS code here -->
+            </select>
+        </div>
+    </div>
+</div>
+
+<script>
+    function generateSelectOptions(selectElementId, rangeEnd, units) {
+    const selectElement = document.getElementById(selectElementId);
+    
+    // Clear existing options (optional)
+    selectElement.innerHTML = '';
+
+    // Create and append options
+    for (let i = 0; i <= rangeEnd; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `${i} ${units}`; // Adjust textContent as needed
+        selectElement.appendChild(option);
+        }
+    }
+
+    // Call the function to generate options from 0 to 31
+    generateSelectOptions('UVIntDays', 30, 'dni');
+    generateSelectOptions('UVIntHours', 23, 'ur');
+    generateSelectOptions('UVIntMinutes', 59, 'minut');
+    generateSelectOptions('UVIntSeconds', 59, 'sekund');
+
+    generateSelectOptions('UVDurHours', 23, 'ur');
+    generateSelectOptions('UVDurMinutes', 59, 'minut');
+    generateSelectOptions('UVDurSeconds', 59, 'sekund');
+</script>

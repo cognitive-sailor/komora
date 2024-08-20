@@ -5,15 +5,21 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 
 
+
 db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__, template_folder='templates')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./blueprints.db'
+    # Configure SQLAlchemy with multiple databases
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./blueprints.db'  # Default database URI
+    app.config['SQLALCHEMY_BINDS'] = {
+        'schedule_db': 'sqlite:///schedule.db',  # Additional database URI
+        'settings_db': 'sqlite:///settings.db'
+    }
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    app.secret_key = 'some key'
 
-    db.init_app(app)
+    app.secret_key = 'a7d14b1b2a7ce906887ff28c5b211e1d6933fa9e8215fa843e8dc6b2e639b92aff2a33b715a9c240a8894457fda82e5d09536235774316e577052ee4cda58a40'
 
     login_manager = LoginManager()
     login_manager.init_app(app)
@@ -39,16 +45,22 @@ def create_app():
     from komorasoft.blueprints.core.routes import core
     from komorasoft.blueprints.users.routes import users
     from komorasoft.blueprints.manual.routes import manual
-    from komorasoft.blueprints.auto.routes import auto
+    # from komorasoft.blueprints.auto.routes import auto
+    # from komorasoft.blueprints.automatic.routes import automatic
+    from komorasoft.blueprints.simple.routes import simple
 
     app.register_blueprint(core, url_prefix='/')
     app.register_blueprint(users, url_prefix='/users')
     app.register_blueprint(sensors, url_prefix='/sensors')
     app.register_blueprint(actuators, url_prefix='/actuators')
     app.register_blueprint(manual, url_prefix='/manual')
-    app.register_blueprint(auto, url_prefix='/auto')
-
-
+    # app.register_blueprint(auto, url_prefix='/auto')
+    # app.register_blueprint(automatic, url_prefix='/automatic')
+    app.register_blueprint(simple,url_prefix='/simple')
+    
+    db.init_app(app)
     migrate = Migrate(app, db)
-
+    with app.app_context():
+        db.create_all()  # This will create tables in the default database
+        
     return app
