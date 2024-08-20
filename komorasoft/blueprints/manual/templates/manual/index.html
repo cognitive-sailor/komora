@@ -15,7 +15,7 @@
         {% for actuator in actuators %}
         <div class="col-md-4 mb-4">
             <div class="card toggle-card" id="card-{{ actuator.id }}" data-device-id="{{ actuator.id }}" data-toggle="popover" title="{{ actuator.description }}">
-                <div class="card-title {% if actuator.is_active %}bg-on{% else %}bg-off{% endif %}">
+                <div id="card_head_{{actuator.id}}" class="card-title {% if actuator.is_active %}bg-on{% else %}bg-off{% endif %}">
                     {{ actuator.name }}
                 </div>
                 <div class="card-body">

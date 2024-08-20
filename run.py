@@ -51,13 +51,14 @@
 
 
 from komorasoft.app import create_app
-from flask_apscheduler import APScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 import threading
 import time
 from flask_socketio import SocketIO
+from sqlalchemy import event
 from komorasoft.blueprints.simple.models import Settings
-from komorasoft.scripts.sensors_read import sensors_read
-from komorasoft.blueprints.actuators.models import Actuator, control_actuator
+from komorasoft.scripts.main_control import switch_on, switch_off
+from komorasoft.blueprints.actuators.models import Actuator
 import asyncio
 
 flask_app = create_app()
@@ -66,43 +67,45 @@ flask_app = create_app()
 socketio = SocketIO(flask_app, cors_allowed_origins="*")
 
 # Initialize the APScheduler instance
-scheduler = APScheduler()
+scheduler = BackgroundScheduler()
 
-# Define the job function
-def update_indicators():
-    with flask_app.app_context():  # Ensure app context is available
-        active_setting = Settings.query.filter_by(active=True).first()  # Find active setting
-        if active_setting:
-            # Emit an event to all connected clients
-            socketio.emit('update_status', {'active': active_setting.active, 'active_name': active_setting.name})
-        else:
-            socketio.emit('update_status', {'active': False, 'active_name': ""})
+# # Define the job function
+# def update_indicators():
+#     with flask_app.app_context():  # Ensure app context is available
+#         active_setting = Settings.query.filter_by(active=True).first()  # Find active setting
+#         if active_setting:
+#             # Emit an event to all connected clients
+#             socketio.emit('update_status', {'active': active_setting.active, 'active_name': active_setting.name})
+#         else:
+#             socketio.emit('update_status', {'active': False, 'active_name': ""})
     
+# def toggle_actuators():
+#     with flask_app.app_context():
+#         all_actuators = Actuator.query.all()
+#         data = {}
+#         for actuator in all_actuators:
+#             data[actuator.id] = actuator.is_active # add actuator's state to the data
+#             if actuator.is_active:
+#                 switch_on(actuator.id) # turn ON physical device
+#             else:
+#                 switch_off(actuator.id) # turn OFF physical device
+#         # socketio.emit('toggle_actuators',{'data':data})
 
-# Initialize and start the scheduler
-scheduler.add_job(func=update_indicators, trigger='interval', seconds=5, id='update_indicators_job')
-scheduler.add_job(func=sensors_read, trigger='interval', seconds=5, id='Senzorji_zajem_podatkov')
-# scheduler.start()
-
-
-async def check_actuators():
-    """Check the actuators asynchronously to turn them on or off based on the timing."""
-    while True:
-        with flask_app.app_context():  # Ensure we're working within an app context
-            actuators = Actuator.query.all()
-
-            # Create a list of tasks for asyncio
-            tasks = [control_actuator(actuator) for actuator in actuators]
-            await asyncio.gather(*tasks)  # Run all tasks concurrently
-
-        await asyncio.sleep(0.5)  # Wait for 0.5 seconds before checking again
-
-def run_main_control():
-    """Run the main control loop using asyncio."""
-    asyncio.run(check_actuators())
-    
+@event.listens_for(Settings,'after_update')
+def update_indicators(mapper, connection, target):
+    if target.active:
+        socketio.emit('update_status', {'active': target.active, 'active_name': target.name})
+    else:
+        socketio.emit('update_status', {'active': False, 'active_name': ""})
 
 
+@event.listens_for(Actuator,'after_update')
+def receive_after_update(mapper, connection, target):
+    socketio.emit('toggle_actuators',{'data':target.is_active})
+    if target.is_active:
+        switch_on(target.id) # turn ON physical device
+    else:
+        switch_off(target.id) # turn OFF physical device
 
 
 

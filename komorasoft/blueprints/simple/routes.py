@@ -243,7 +243,7 @@ def start():
         # set interval and duration for every actuator in the database
         for actuator_setting in data.items():
             print(actuator_setting[0]) ####################################################################################################################
-            if actuator_setting[0] not in (optionals or ["id","settingTitle","settingsDescription","temperature","advanced"]):
+            if actuator_setting[0] not in ["id","settingsTitle","settingsDescription","temperature","advanced","optionals"]:
                 setting2Actuator(actuator_setting[0],actuator_setting[1])
         # main_control(data) # send setting's data to the main control function
 

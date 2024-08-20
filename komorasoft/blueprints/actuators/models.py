@@ -33,31 +33,30 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-
-async def control_actuator(actuator):
-    now = datetime.now()
+# async def control_actuator(actuator):
+#     now = datetime.now()
     
-    try:
-        # Calculate activation and deactivation times
-        next_activation_time = actuator.last_activation_time + actuator.interval if actuator.last_activation_time else now + actuator.interval
-        next_deactivation_time = actuator.last_activation_time + actuator.duration if actuator.last_activation_time else next_activation_time + actuator.duration
+#     try:
+#         # Calculate activation and deactivation times
+#         next_activation_time = actuator.last_activation_time + actuator.interval if actuator.last_activation_time else now + actuator.interval
+#         next_deactivation_time = actuator.last_activation_time + actuator.duration if actuator.last_activation_time else next_activation_time + actuator.duration
 
-        # Activation logic
-        if now >= next_activation_time and not actuator.is_active:
-            logger.info(f"Activating {actuator.name} at {now}")
-            actuator.is_active = True
-            actuator.last_activation_time = now
-            db.session.commit()
+#         # Activation logic
+#         if now >= next_activation_time and not actuator.is_active:
+#             logger.info(f"Activating {actuator.name} at {now}")
+#             actuator.is_active = True
+#             actuator.last_activation_time = now
+#             db.session.commit()
 
-        # Deactivation logic
-        if now >= next_deactivation_time and actuator.is_active:
-            logger.info(f"Deactivating {actuator.name} at {now}")
-            actuator.is_active = False
-            actuator.last_deactivation_time = now
-            db.session.commit()
+#         # Deactivation logic
+#         if now >= next_deactivation_time and actuator.is_active:
+#             logger.info(f"Deactivating {actuator.name} at {now}")
+#             actuator.is_active = False
+#             actuator.last_deactivation_time = now
+#             db.session.commit()
 
-    except Exception as e:
-        logger.error(f"Error in controlling actuator {actuator.name}: {e}")
-        db.session.rollback()  # Rollback the transaction on error
-        # Implement retry logic if necessary
+#     except Exception as e:
+#         logger.error(f"Error in controlling actuator {actuator.name}: {e}")
+#         db.session.rollback()  # Rollback the transaction on error
+#         # Implement retry logic if necessary
         
