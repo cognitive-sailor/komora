@@ -69,28 +69,6 @@ socketio = SocketIO(flask_app, cors_allowed_origins="*")
 # Initialize the APScheduler instance
 scheduler = BackgroundScheduler()
 
-# # Define the job function
-# def update_indicators():
-#     with flask_app.app_context():  # Ensure app context is available
-#         active_setting = Settings.query.filter_by(active=True).first()  # Find active setting
-#         if active_setting:
-#             # Emit an event to all connected clients
-#             socketio.emit('update_status', {'active': active_setting.active, 'active_name': active_setting.name})
-#         else:
-#             socketio.emit('update_status', {'active': False, 'active_name': ""})
-    
-# def toggle_actuators():
-#     with flask_app.app_context():
-#         all_actuators = Actuator.query.all()
-#         data = {}
-#         for actuator in all_actuators:
-#             data[actuator.id] = actuator.is_active # add actuator's state to the data
-#             if actuator.is_active:
-#                 switch_on(actuator.id) # turn ON physical device
-#             else:
-#                 switch_off(actuator.id) # turn OFF physical device
-#         # socketio.emit('toggle_actuators',{'data':data})
-
 @event.listens_for(Settings,'after_update')
 def update_indicators(mapper, connection, target):
     if target.active:
