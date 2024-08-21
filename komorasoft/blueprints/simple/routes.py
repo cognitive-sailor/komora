@@ -6,8 +6,7 @@ from datetime import datetime, timedelta
 from komorasoft.app import db
 from komorasoft.blueprints.actuators.models import Actuator
 from komorasoft.blueprints.simple.models import Settings, ActuatorSetting
-from komorasoft.scripts.frontend.updateui import update_active_setting, check_active, stop_all
-from komorasoft.scripts.main_control import main_control
+from komorasoft.scripts.frontend.updateui import update_active_setting, check_active, stop_all, stop_all_settings
 
 simple = Blueprint('simple', __name__, static_folder="static", template_folder='templates/simple')
 
@@ -225,26 +224,30 @@ def check_active_settings():
 def start():
 
     def setting2Actuator(act_name,data):
-        print(f"setting2Actuator:\nActuator: {act_name}, data: {data}")
-        actuator = Actuator.query.filter_by(name=act_name) # get the actuator
+        # print(f"setting2Actuator:\nActuator: {act_name}, data: {data}")
+        actuator = Actuator.query.filter_by(name=act_name).first() # get the actuator
         actuator.interval = timedelta(days=int(data['IntDays']),hours=int(data['IntHours']),minutes=int(data['IntMinutes']),seconds=int(data['IntSeconds']))
         actuator.duration = timedelta(hours=int(data['DurHours']),minutes=int(data['DurMinutes']),seconds=int(data['DurSeconds']))
         db.session.commit()
+        print(f"{actuator.name} new interval: {actuator.interval}, new duration: {actuator.duration}")
 
 
     if current_user.role == "Administrator":
         settingID = request.form.get('confirmStart_SettingID') # get ID of the setting the user is starting..
-        update_active_setting(settingID) # set this setting to active, others to inactive
-        currently_active_setting = check_active()
 
         # prepare all data for the main_control script
         data = get_setting(settingID).get_json() # get the submitted setting and strip it of HTTP to get only JSON
-        optionals = data['optionals']
+        stop_all_settings() # set all settings to INACTIVE
+        stop_all() # stop all actuators (turn them OFF)
         # set interval and duration for every actuator in the database
         for actuator_setting in data.items():
-            print(actuator_setting[0]) ####################################################################################################################
+            # print(actuator_setting[0]) 
             if actuator_setting[0] not in ["id","settingsTitle","settingsDescription","temperature","advanced","optionals"]:
                 setting2Actuator(actuator_setting[0],actuator_setting[1])
+
+        update_active_setting(settingID) # set this setting to active, others to inactive
+        currently_active_setting = check_active()
+        print(f"currently_active_setting {currently_active_setting}")
         # main_control(data) # send setting's data to the main control function
 
         return redirect(url_for('simple.index'))
@@ -255,8 +258,10 @@ def start():
 @login_required
 def stop():
     if current_user.role == "Administrator":
-        stop_all() # set all settings's active attribute to False
+        stop_all_settings() # set all settings's active attribute to False
+        stop_all() # actuators.is_active to false & turn off
         message = "Zaustavili ste izvajanje programa!"
+        print(message)
         return redirect(url_for('simple.index'))
     else:
         return render_template('not_authorized.html')

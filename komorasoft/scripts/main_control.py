@@ -4,17 +4,17 @@ import RPi.GPIO as GPIO
 import time
 
 
-def main_control(data):
-    print("--------------------     Starting the main control function     --------------------")
-    # 0. Append the timestamp of the execution:START to the submitted setting
-    data['execution_start'] = datetime.now().strftime("%Y-%m-%d@%H:%M:%S")
-    print(data)
-    for actuator, settings in data.items():
-        if actuator not in ["id","settingsTitle","settingsDescription","temperature","advanced","execution_start"]:
-            # Dictionary
-            interval = timedelta(days=settings["IntDays"],hours=settings["IntHours"],minutes=settings["IntMinutes"],seconds=settings["IntSeconds"])
-            duration = timedelta(hours=settings["DurHours"],minutes=settings["DurMinutes"],seconds=settings["DurSeconds"])
-            Actuator.query.filter_by(name=actuator)
+# def main_control(data):
+#     print("--------------------     Starting the main control function     --------------------")
+#     # 0. Append the timestamp of the execution:START to the submitted setting
+#     data['execution_start'] = datetime.now().strftime("%Y-%m-%d@%H:%M:%S")
+#     print(data)
+#     for actuator, settings in data.items():
+#         if actuator not in ["id","settingsTitle","settingsDescription","temperature","advanced","execution_start"]:
+#             # Dictionary
+#             interval = timedelta(days=settings["IntDays"],hours=settings["IntHours"],minutes=settings["IntMinutes"],seconds=settings["IntSeconds"])
+#             duration = timedelta(hours=settings["DurHours"],minutes=settings["DurMinutes"],seconds=settings["DurSeconds"])
+#             Actuator.query.filter_by(name=actuator)
 
 def switch_on(actuator):
     '''
@@ -31,17 +31,17 @@ def switch_on(actuator):
     '''
     GPIO.setmode(GPIO.BCM)
     actuator = str(actuator)
-    RELAYS = {'1':14,'2':15,'3':18,'4':23,'5':24,'6':25,'7':8,'8':7,'9':16,'10':12}
+    RELAYS = {'1':15,'2':14,'3':18,'4':23,'5':24,'6':25,'7':8,'8':7,'9':16,'10':12}
     GPIO.setup(RELAYS[actuator],GPIO.OUT)
     GPIO.output(RELAYS[actuator],GPIO.HIGH)
-    time.sleep(1)
+    time.sleep(0.2)
 
 def switch_off(actuator):
     GPIO.setmode(GPIO.BCM)
     actuator = str(actuator)
-    RELAYS = {'1':14,'2':15,'3':18,'4':23,'5':24,'6':25,'7':8,'8':7,'9':16,'10':12}
+    RELAYS = {'1':15,'2':14,'3':18,'4':23,'5':24,'6':25,'7':8,'8':7,'9':16,'10':12}
     GPIO.setup(RELAYS[actuator],GPIO.OUT)
     GPIO.output(RELAYS[actuator],GPIO.LOW)
-    time.sleep(1)
+    time.sleep(0.2)
 
 
