@@ -8,7 +8,11 @@ from sqlalchemy import event
 from komorasoft.blueprints.simple.models import Settings
 from komorasoft.scripts.main_control import switch_on, switch_off
 from komorasoft.blueprints.actuators.models import Actuator
-from datetime import timedelta
+from datetime import timedelta, datetime
+import cv2
+import os
+import h5py
+import numpy as np
 
 flask_app = create_app()
 
@@ -19,18 +23,44 @@ socketio = SocketIO(flask_app, logger=False, engineio_logger=False)
 scheduler = BackgroundScheduler()
 scheduler.start()
 
+def temperature_control(id):
+    # Read sensor temperatures from HDF5 file
+    with h5py.File('/home/komora/KomoraMeritveSenzorjev/.sensor_data_app.h5', 'r') as f:
+        all_temps = f['experiment/temperatures/Temperature']
+        temps = all_temps[-1,[0,2]] # get the latest T1 and T2
+        sensor_temp = np.average(temps)
+    
+        # Get user specified temperature
+        with flask_app.app_context():
+            setting = Settings.query.get(id)
+            set_temp = int(setting.temperature)
+            if sensor_temp > set_temp:
+                # Turn on the AC cooling
+                switch_on(1) # kompresor ON
+            else:
+                switch_off(1) # kompresor OFF
+
+
+def camera_read():
+    save_path = "/mnt/shramba/"+datetime.now().strftime("%Y-%m-%d")
+    cam = cv2.VideoCapture(0) # setup a camera
+    result, image = cam.read()
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+    cv2.imwrite(save_path+"/"+datetime.now().isoformat()+".jpg", image)
+    print("Image caputred!")
+
 def actuator_control(id,duration):
-    # from komorasoft.app import db
-    # actuator = Actuator.query.get(id)
-    # actuator.is_active = True # set the "is_active" state of actuator to True in the database
-    # db.session.commit()
     switch_on(id) # turn ON the physical actuator
     print(f"Actuator {id}: ON (auto control)")
+    if id == 8:
+        switch_on(4) # turn ON the LED
+        time.sleep(0.5)
+        camera_read() # take a photo
+        switch_off(4) # turn OFF the LED
     time.sleep(duration)
     switch_off(id) # turn OFF the physical actuator and wait for the interval to end
     print(f"Actuator {id}: OFF (auto control)")
-    # actuator.is_active = False # set the "is_active" state of actuator to True in the database
-    # db.session.commit()
 
 
 @event.listens_for(Settings,'after_update')
@@ -39,7 +69,15 @@ def update_indicators(mapper, connection, target):
         # Update the indicators in the app
         if target.active:
             socketio.emit('update_status', {'active': target.active, 'active_name': target.name})
-
+            # Write job start time to HDF5 sensor_data.h5 file
+            with h5py.File('/home/komora/KomoraMeritveSenzorjev/.sensor_data_app.h5', 'a') as f:
+                jobs_ds = f['experiment/job runs/jobs']
+                jobs_ds.resize((jobs_ds.shape[0]+1, jobs_ds.shape[1])) # make space for new entry
+                jobs_ds[-1,0] = np.bytes_(datetime.now().isoformat()) # write start time
+                f.flush()
+            # Start temperature control
+            scheduler.add_job(func=temperature_control,args=[target.id],trigger=IntervalTrigger(seconds=2),id='temperature_control_job')
+            # Actuators control
             actuators = Actuator.query.all()
             for act in actuators:
                 print(act.name, act.interval, act.duration)
@@ -55,6 +93,13 @@ def update_indicators(mapper, connection, target):
                                         trigger=IntervalTrigger(seconds=int(act.interval.total_seconds())),
                                         id=str(act.id))
                         print(f"Job {act.name} created!")
+        elif not target.active:
+            # Write job end time to HDF5 sensor_data.h5 file
+            with h5py.File('/home/komora/KomoraMeritveSenzorjev/.sensor_data_app.h5', 'a') as f:
+                jobs_ds = f['experiment/job runs/jobs']
+                jobs_ds.resize((jobs_ds.shape[0]+1, jobs_ds.shape[1])) # make space for new entry
+                jobs_ds[-1,1] = np.bytes_(datetime.now().isoformat()) # write end time
+                f.flush()
         else:
             socketio.emit('update_status', {'active': False, 'active_name': ""})
 
@@ -73,6 +118,10 @@ def receive_after_update(mapper, connection, target):
             if target.is_active:
                 switch_on(target.id) # turn ON physical device
                 print(f"Manual control, {target.name} switched ON")
+                if target.id == 8:
+                    camera_read()
+                    time.sleep(0.5)
+                    switch_off(target.id)
             else:
                 switch_off(target.id) # turn OFF physical device
                 print(f"Manual control, {target.name} switched OFF")

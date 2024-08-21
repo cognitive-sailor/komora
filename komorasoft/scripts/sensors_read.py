@@ -50,6 +50,7 @@ def sensors_read():
         temp_grp = exp_grp.require_group('temperatures')
         hum_grp = exp_grp.require_group('humidity')
         gas_grp = exp_grp.require_group('gas')
+        job_grp = exp_grp.require_group('job runs')
 
         # set/check datasets within each group
         time_ds = exp_grp.require_dataset(name='Timestamps',
@@ -72,6 +73,11 @@ def sensors_read():
                                          maxshape=(None,3), # unlimited rows
                                          dtype=np.float64,
                                          chunks=True)
+        jobs_ds = job_grp.require_dataset(name='jobs',
+                                          shape=(0,2),
+                                          maxshape=(None,2),
+                                          dtype=h5py.string_dtype(),
+                                          chunks=True)
         # assing attributes to groups and datasets
         if 'units' not in temp_ds.attrs:
             temp_ds.attrs['units'] = 'Celsius'
@@ -85,7 +91,9 @@ def sensors_read():
             gas_ds.attrs['units'] = 'CO2:ppm, H2:ppm, O2:%'
         if 'description' not in gas_ds.attrs:
             gas_ds.attrs['description'] = 'Gasses in the chamber. Carbon dioxide: bottom of the chamber. Oxygen: box on the top of the chamber. Hydrogen: box on the top of the chamber.'
-        
+        if 'description' not in jobs_ds.attrs:
+            jobs_ds.attrs['description'] = 'Start and stop times of each job run.'
+
         print("HDF5 file ready for action!")
         try:
             while True:
