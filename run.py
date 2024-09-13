@@ -83,7 +83,10 @@ def update_indicators(mapper, connection, target):
             with lock:
                 with h5py.File(sensor_data, 'a') as f:
                     jobs_ds = f['experiment/job runs/jobs']
+                    print("=========================================")
+                    print(jobs_ds.shape)
                     jobs_ds.resize((jobs_ds.shape[0]+1, jobs_ds.shape[1])) # make space for new entry
+                    print(jobs_ds.shape)
                     jobs_ds[-1,0] = np.bytes_(datetime.now().isoformat()) # write start time
                     f.flush()
                 # Start temperature control
