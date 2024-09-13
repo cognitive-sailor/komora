@@ -31,7 +31,7 @@ def switch_on(actuator):
     '''
     GPIO.setmode(GPIO.BCM)
     actuator = str(actuator)
-    RELAYS = {'1':15,'2':14,'3':18,'4':23,'5':24,'6':25,'7':8,'8':7,'9':16,'10':12}
+    RELAYS = {'1':15,'2':14,'3':18,'4':23,'5':24,'6':25,'7':8,'8':7,'9':12,'10':16}
     GPIO.setup(RELAYS[actuator],GPIO.OUT)
     GPIO.output(RELAYS[actuator],GPIO.HIGH)
     time.sleep(0.2)
@@ -39,7 +39,7 @@ def switch_on(actuator):
 def switch_off(actuator):
     GPIO.setmode(GPIO.BCM)
     actuator = str(actuator)
-    RELAYS = {'1':15,'2':14,'3':18,'4':23,'5':24,'6':25,'7':8,'8':7,'9':16,'10':12}
+    RELAYS = {'1':15,'2':14,'3':18,'4':23,'5':24,'6':25,'7':8,'8':7,'9':12,'10':16}
     GPIO.setup(RELAYS[actuator],GPIO.OUT)
     GPIO.output(RELAYS[actuator],GPIO.LOW)
     time.sleep(0.2)

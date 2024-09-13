@@ -100,9 +100,19 @@ def sensors_read():
                 # Read sensors
                 current_time = np.bytes_(datetime.now().isoformat())
                 T1, H1, T2, H2 = temp_humi_read(disp=False)
+                # print("T1,T2,H1,H2 acquired")
                 CO2, T3, H3 = co2_temp_humi_read(scd4x,disp=False)
-                Hydrogen, Oxygen, T4, T5 = h2o2_read(arduino,disp=False)
-                print(f"Ti: {T1}, T2: {T2}, T3: {T3}, T4: {T4}, T5: {T5}\nH1: {H1}, H2: {H2}, H3: {H3}\nCO2: {CO2}, Hydrogen: {Hydrogen}, Oxygen: {Oxygen}")
+                # print("CO2,T3,H3 acquired")
+                try:
+                    Hydrogen, Oxygen, T4, T5 = h2o2_read(arduino,disp=False)
+                    # print("H2,O2,T4,T5 acquired")
+                except:
+                    Hydrogen = 0
+                    Oxygen = 0
+                    T4 = -500
+                    T5 = -500
+                    print("exception: H2,O2,T4,T5 not acquired")
+                #print(f"Ti: {T1}, T2: {T2}, T3: {T3}, T4: {T4}, T5: {T5}\nH1: {H1}, H2: {H2}, H3: {H3}\nCO2: {CO2}, Hydrogen: {Hydrogen}, Oxygen: {Oxygen}")
                 
                 # Resize datasets to make room for new data
                 time_ds.resize(time_ds.shape[0]+1, axis=0)
@@ -161,8 +171,9 @@ def co2_temp_humi_read(scd4x,disp=False):
         return scd4x.CO2, scd4x.temperature, scd4x.relative_humidity
 
 def h2o2_read(arduino,disp=False):
-    # arduino.reset_input_buffer()
+    arduino.reset_input_buffer()
     data = arduino.readline().decode('utf-8').strip()
+    # print(data)
     if data:
         # Convert from string to float
         H2con, O2con, T4, T5 = [float(number) for number in data.split()]

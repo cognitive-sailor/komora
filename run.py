@@ -13,6 +13,7 @@ import cv2
 import os
 import h5py
 import numpy as np
+from filelock import FileLock
 
 flask_app = create_app()
 
@@ -23,22 +24,29 @@ socketio = SocketIO(flask_app, logger=False, engineio_logger=False)
 scheduler = BackgroundScheduler()
 scheduler.start()
 
+# Set the lock on 
+sensor_data = '/home/komora/KomoraMeritveSenzorjev/.sensor_data_app.h5'
+lock = FileLock(sensor_data + '.lock')
+
 def temperature_control(id):
     # Read sensor temperatures from HDF5 file
-    with h5py.File('/home/komora/KomoraMeritveSenzorjev/.sensor_data_app.h5', 'r') as f:
-        all_temps = f['experiment/temperatures/Temperature']
-        temps = all_temps[-1,[0,2]] # get the latest T1 and T2
-        sensor_temp = np.average(temps)
-    
-        # Get user specified temperature
-        with flask_app.app_context():
-            setting = Settings.query.get(id)
-            set_temp = int(setting.temperature)
-            if sensor_temp > set_temp:
-                # Turn on the AC cooling
-                switch_on(1) # kompresor ON
-            else:
-                switch_off(1) # kompresor OFF
+    with lock:
+        with h5py.File(sensor_data, 'r') as f:
+            all_temps = f['experiment/temperatures/Temperature']
+            temps = all_temps[-1,[1,2]] # get the latest T2 and T3
+            sensor_temp = np.average(temps)
+        
+            # Get user specified temperature
+            with flask_app.app_context():
+                setting = Settings.query.get(id)
+                set_temp = int(setting.temperature)
+                if sensor_temp > set_temp:
+                    # Turn on the AC cooling
+                    switch_on(1) # kompresor ON
+                    switch_on(2) # ventilator uparjalnika ON
+                else:
+                    switch_off(1) # kompresor OFF
+                    switch_off(2) # ventilator uparjalnika OFF
 
 
 def camera_read():
@@ -55,9 +63,11 @@ def actuator_control(id,duration):
     print(f"Actuator {id}: ON (auto control)")
     if id == 8:
         switch_on(4) # turn ON the LED
+        switch_on(7) # turn ON the camera ring light
         time.sleep(0.5)
         camera_read() # take a photo
         switch_off(4) # turn OFF the LED
+        switch_off(7) # turn OFF the camera ring light
     time.sleep(duration)
     switch_off(id) # turn OFF the physical actuator and wait for the interval to end
     print(f"Actuator {id}: OFF (auto control)")
@@ -70,36 +80,38 @@ def update_indicators(mapper, connection, target):
         if target.active:
             socketio.emit('update_status', {'active': target.active, 'active_name': target.name})
             # Write job start time to HDF5 sensor_data.h5 file
-            with h5py.File('/home/komora/KomoraMeritveSenzorjev/.sensor_data_app.h5', 'a') as f:
-                jobs_ds = f['experiment/job runs/jobs']
-                jobs_ds.resize((jobs_ds.shape[0]+1, jobs_ds.shape[1])) # make space for new entry
-                jobs_ds[-1,0] = np.bytes_(datetime.now().isoformat()) # write start time
-                f.flush()
-            # Start temperature control
-            scheduler.add_job(func=temperature_control,args=[target.id],trigger=IntervalTrigger(seconds=2),id='temperature_control_job')
-            # Actuators control
-            actuators = Actuator.query.all()
-            for act in actuators:
-                print(act.name, act.interval, act.duration)
-                if not (act.interval == act.duration == timedelta(seconds=0)):
-                    print(f"Automatic control: {act.name} every {act.interval}s for {act.duration}s")
-                    existing_job = scheduler.get_job(str(act.id))
-                    if existing_job:
-                        print(f"Job {act.name} is running")
-                    else:
-                        # Create a new job
-                        scheduler.add_job(func=actuator_control,
-                                        args=[act.id,int(act.duration.total_seconds())],
-                                        trigger=IntervalTrigger(seconds=int(act.interval.total_seconds())),
-                                        id=str(act.id))
-                        print(f"Job {act.name} created!")
+            with lock:
+                with h5py.File(sensor_data, 'a') as f:
+                    jobs_ds = f['experiment/job runs/jobs']
+                    jobs_ds.resize((jobs_ds.shape[0]+1, jobs_ds.shape[1])) # make space for new entry
+                    jobs_ds[-1,0] = np.bytes_(datetime.now().isoformat()) # write start time
+                    f.flush()
+                # Start temperature control
+                scheduler.add_job(func=temperature_control,args=[target.id],trigger=IntervalTrigger(seconds=2),id='temperature_control_job')
+                # Actuators control
+                actuators = Actuator.query.all()
+                for act in actuators:
+                    print(act.name, act.interval, act.duration)
+                    if not (act.interval == act.duration == timedelta(seconds=0)):
+                        print(f"Automatic control: {act.name} every {act.interval}s for {act.duration}s")
+                        existing_job = scheduler.get_job(str(act.id))
+                        if existing_job:
+                            print(f"Job {act.name} is running")
+                        else:
+                            # Create a new job
+                            scheduler.add_job(func=actuator_control,
+                                            args=[act.id,int(act.duration.total_seconds())],
+                                            trigger=IntervalTrigger(seconds=int(act.interval.total_seconds())),
+                                            id=str(act.id))
+                            print(f"Job {act.name} created!")
         elif not target.active:
             # Write job end time to HDF5 sensor_data.h5 file
-            with h5py.File('/home/komora/KomoraMeritveSenzorjev/.sensor_data_app.h5', 'a') as f:
-                jobs_ds = f['experiment/job runs/jobs']
-                jobs_ds.resize((jobs_ds.shape[0]+1, jobs_ds.shape[1])) # make space for new entry
-                jobs_ds[-1,1] = np.bytes_(datetime.now().isoformat()) # write end time
-                f.flush()
+            with lock:
+                with h5py.File(sensor_data, 'a') as f:
+                    jobs_ds = f['experiment/job runs/jobs']
+                    jobs_ds.resize((jobs_ds.shape[0]+1, jobs_ds.shape[1])) # make space for new entry
+                    jobs_ds[-1,1] = np.bytes_(datetime.now().isoformat()) # write end time
+                    f.flush()
         else:
             socketio.emit('update_status', {'active': False, 'active_name': ""})
 
