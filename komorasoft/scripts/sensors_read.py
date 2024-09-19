@@ -11,6 +11,8 @@ import serial
 import cv2
 import h5py
 import numpy as np
+import socket
+import pickle
 
 
 def sensors_show():
@@ -74,19 +76,35 @@ def sensors_read():
                                          dtype=np.float64,
                                          chunks=True)
         jobs_ds = job_grp.require_dataset(name='jobs',
-                                          shape=(0,2),
-                                          maxshape=(None,2),
+                                          shape=(0,3),
+                                          maxshape=(None,3),
                                           dtype=h5py.string_dtype(),
                                           chunks=True)
         # assing attributes to groups and datasets
         if 'units' not in temp_ds.attrs:
             temp_ds.attrs['units'] = 'Celsius'
         if 'description' not in temp_ds.attrs:
-            temp_ds.attrs['description'] = 'Temperature readings. T1: outside the chamber. T2: inside the chamber in the box on the top. T3: bottom of the chamber. T4: up, on the cables. T5: up between the fins of the evaporator.'
+            temp_ds.attrs['description'] = 'Temperature readings.'
+        if 'T1 sensor' not in temp_ds.attrs:
+            temp_ds.attrs['T1 sensor'] =  'T1: inside the chamber in the box on the top.'
+        if 'T2 sensor' not in temp_ds.attrs:
+            temp_ds.attrs['T2 sensor'] =  'T2: outside the chamber.' 
+        if 'T3 sensor' not in temp_ds.attrs:
+            temp_ds.attrs['T3 sensor'] =  'T3: bottom of the chamber.' 
+        if 'T4 sensor' not in temp_ds.attrs:
+            temp_ds.attrs['T4 sensor'] =  'T4: up, on the cables.'
+        if 'T5 sensor' not in temp_ds.attrs:
+            temp_ds.attrs['T5 sensor'] =  'T5: up between the fins of the evaporator.'
         if 'units' not in hum_ds.attrs:
             hum_ds.attrs['units'] = '%'
         if 'description' not in hum_ds.attrs:
-            hum_ds.attrs['description'] = 'Humidity readings - relative humidity. H1: outside the chamber. H2: inside the chamber in the box on the top. H3: bottom of the chamber.'
+            hum_ds.attrs['description'] = 'Humidity readings - relative humidity.'
+        if 'H1 sensor' not in hum_ds.attrs:
+            hum_ds.attrs['H1 sensor'] = 'H1: outside the chamber.'
+        if 'H2 sensor' not in hum_ds.attrs:
+            hum_ds.attrs['H2 sensor'] = 'H2: inside the chamber in the box on the top.'
+        if 'H3 sensor' not in hum_ds.attrs:
+            hum_ds.attrs['H3 sensor'] = 'H3: bottom of the chamber.'
         if 'units' not in gas_ds.attrs:
             gas_ds.attrs['units'] = 'CO2:ppm, H2:ppm, O2:%'
         if 'description' not in gas_ds.attrs:
@@ -97,6 +115,39 @@ def sensors_read():
         print("HDF5 file ready for action!")
         try:
             while True:
+                # Start socket server
+                try:
+                    server_socket
+                except NameError:
+                    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    server_socket.bind(('localhost', 54492))  # Bind to localhost and port 12345
+                    server_socket.listen(1)  # Listen for incoming connections
+                    server_socket.settimeout(1.0)
+                    print("Server listening on port 54492...")
+                try:
+                    conn, addr = server_socket.accept()  # Accept the incoming connection
+                    print(f"Connected to {addr}")
+                    conn.settimeout(1.0)
+                    try:
+                        # Check if the setting was acitvated/stopped
+                        # data = conn.recv(1024*4).decode('utf-8')  # Receive data from the client
+                        data = pickle.loads(conn.recv(1024*4))
+                        print(f"Just received: {data}")
+                        if data[0]:
+                            # if setting just got active, insert new row
+                            jobs_ds.resize(jobs_ds.shape[0]+1, axis=0)
+                            jobs_ds[-1,[0,1]] = [data[1],current_time]
+                            print(f"Job {data[1]} start time written to sensor_data.h5")
+                        if not data[0]:
+                            # if setting just got inactive, add end time to the last row
+                            jobs_ds[-1,2] = current_time
+                            conn.close()
+                            print(f"Job {data[1]} end time written to sensor_data.h5")
+                    except socket.timeout:
+                        print("No data received from run.py")
+                except socket.timeout:
+                    print("No connection established.")
+
                 # Read sensors
                 current_time = np.bytes_(datetime.now().isoformat())
                 T1, H1, T2, H2 = temp_humi_read(disp=False)
@@ -125,9 +176,11 @@ def sensors_read():
                 temp_ds[-1,:] = [T1, T2, T3, T4, T5]
                 hum_ds[-1,:] = [H1, H2, H3]
                 gas_ds[-1,:] = [CO2, Hydrogen, Oxygen]
+                
 
                 # Flush changes to disk
                 f.flush()
+                print("Data successfully appended!")
 
         except KeyboardInterrupt:
             print("Terminating reading sensors and closing the .h5 file.")

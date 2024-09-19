@@ -50,6 +50,7 @@
     text-align: center;
     margin: 0; /* Remove default margins */
     padding: 4px;
+    padding-top: 100px;
 }
 
 /* Styling for the buttons */
@@ -58,6 +59,7 @@
     border: none;
     width: 30%;
     padding: 0;
+    padding-top: 50px;
     cursor: pointer;
     display: flex;
     justify-content: center;

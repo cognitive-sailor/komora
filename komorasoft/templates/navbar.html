@@ -37,6 +37,7 @@
           <img id="sensorsIndicator" src="{{url_for('static',filename='images/sensors-black.png')}}" alt="senzorji" style="height: 25px; margin-left: 20px;">
           <p id="programIndicatorText" style="width: fit-content; margin: 0%; padding: 0%; margin-left: 60px;">Izvajanje programa</p>
           <img id="programIndicator" src="#" alt="program aktiven?" style="height: 25px; margin-left: 20px;">
+          <p id="tempIndicatorText" style="width: fit-content; margin: 0%; padding: 0%; margin-left: 50px;">T=x˚C</p>
         </div>
         {% if not current_user.is_authenticated %}
           <form action="{{url_for('users.login')}}" class="d-flex" role="search" method="POST">

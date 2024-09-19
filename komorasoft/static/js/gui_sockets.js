@@ -1,5 +1,6 @@
 
-const socket = io.connect('http://' + document.domain + ':' + location.port);
+var socket = io.connect('http://' + document.domain + ':' + location.port);
+var socket3 = io.connect('http://' + document.domain + ':' + location.port);
 
 socket.on('update_status', function(data) {
     const statusIcon = document.getElementById('programIndicator'); // icon in navbar
@@ -23,4 +24,11 @@ socket.on('update_status', function(data) {
         settingStartButton.disabled = false;
 
     }
+});
+
+socket3.on('update_temp',function(data) {
+    const tempIndicatorText = document.getElementById('tempIndicatorText');
+    var temp = data.temp.toFixed(2);
+    console.log(temp);
+    tempIndicatorText.innerHTML = "T="+temp+"˚C";
 });
